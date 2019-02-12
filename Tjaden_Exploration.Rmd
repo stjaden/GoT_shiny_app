@@ -1,0 +1,93 @@
+---
+title: "Tjaden_DataVis"
+author: "Savannah Tjaden"
+date: "1/27/2019"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+
+
+```{r}
+library(tidyverse)
+library(readr)
+
+battles <- read_csv("battles.csv")
+
+```
+
+
+-Type of battle by house (attack or defend)- counts
+-Battle region by house- counts
+-Overall winning percentage by house
+-Average/median/max army size by house
+-Histogram of attack size and defend size for sliding bar of total human army size
+-Probability of winning based on (for all humans)
+  ADR ratio
+  Region
+  Type of battle
+-% wins overall for each house
+
+
+
+
+
+```{r, counts}
+
+# wins by house
+counts_wins <- battles %>% 
+  group_by(attacker_1, attacker_outcome) %>% 
+  tally()
+
+
+# number of battle types each house has fought in
+battle_types <- battles %>% 
+  group_by(attacker_1, battle_type) %>% 
+  tally()
+
+
+# regions each house has fought in
+battle_region <- battles %>% 
+  group_by(attacker_1, region) %>% 
+  tally()
+
+#attacking army size by house
+army_size_attack <- battles %>% 
+  group_by(attacker_1, attacker_size) %>% 
+  summarise()
+
+#defending army size by house
+army_size_defend <- battles %>% 
+  group_by(defender_1, defender_size) %>% 
+  summarise()
+
+
+# min/max/avg army size of all battles
+army_size_summary <-
+
+
+
+```
+
+
+```{r}
+
+ battle2 <- battles %>% 
+  mutate(ADR = attacker_size/defender_size) %>% 
+  select(attacker_1, defender_1, battle_type,ADR, attacker_outcome, region) %>% 
+  filter(ADR != "NA") # need to remove any rows with NA values
+
+ggplot(battle2, aes(x = attacker_1, y = ADR))+
+  geom_col(aes(fill = attacker_outcome)) +
+  scale_fill_manual(values = c("red", "darkgreen")) + #manually choose colors
+  coord_flip()+
+  theme_classic()
+
+
+
+
+```
+
