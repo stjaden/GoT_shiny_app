@@ -1,0 +1,61 @@
+﻿battle_number,attacker_king,defender_king,attacker_1,defender_1,attacker_outcome,outcome_indicator,battle_type,attacker_size,defender_size,summer,region
+1,Joffrey/Tommen Baratheon,Robb Stark,Lannister,Tully,win,1,pitched battle,15000,4000,1,The Westerlands
+2,Joffrey/Tommen Baratheon,Robb Stark,Lannister,Baratheon,win,1,ambush,,120,1,The Riverlands
+3,Joffrey/Tommen Baratheon,Robb Stark,Lannister,Tully,win,1,pitched battle,15000,10000,1,The Riverlands
+4,Robb Stark,Joffrey/Tommen Baratheon,Stark,Lannister,loss,0,pitched battle,18000,20000,1,The Riverlands
+5,Robb Stark,Joffrey/Tommen Baratheon,Stark,Lannister,win,1,ambush,1875,6000,1,The Riverlands
+5,Robb Stark,Joffrey/Tommen Baratheon,Tully,Lannister,win,1,ambush,1875,6000,1,The Riverlands
+6,Robb Stark,Joffrey/Tommen Baratheon,Stark,Lannister,win,1,ambush,6000,12625,1,The Riverlands
+6,Robb Stark,Joffrey/Tommen Baratheon,Tully,Lannister,win,1,ambush,6000,12625,1,The Riverlands
+7,Joffrey/Tommen Baratheon,Robb Stark,Lannister,Darry,win,1,pitched battle,,,1,The Riverlands
+8,Balon/Euron Greyjoy,Robb Stark,Greyjoy,Stark,win,1,pitched battle,,,1,The North
+9,Balon/Euron Greyjoy,Robb Stark,Greyjoy,Stark,win,1,siege,1000,,1,The North
+10,Balon/Euron Greyjoy,Robb Stark,Greyjoy,Stark,win,1,ambush,264,,1,The North
+11,Robb Stark,Balon/Euron Greyjoy,Stark,Greyjoy,win,1,pitched battle,244,900,1,The North
+12,Balon/Euron Greyjoy,Robb Stark,Greyjoy,Stark,win,1,ambush,20,,1,The North
+13,Balon/Euron Greyjoy,Balon/Euron Greyjoy,Greyjoy,Stark,win,1,siege,,,1,The North
+14,Joffrey/Tommen Baratheon,Robb Stark,Bolton,Stark,win,1,ambush,618,2000,1,The North
+14,Joffrey/Tommen Baratheon,Robb Stark,Greyjoy,Stark,win,1,ambush,618,2000,1,The North
+15,Robb Stark,Joffrey/Tommen Baratheon,Stark,Lannister,win,1,ambush,6000,10000,1,The Westerlands
+15,Robb Stark,Joffrey/Tommen Baratheon,Tully,Lannister,win,1,ambush,6000,10000,1,The Westerlands
+16,Stannis Baratheon,Renly Baratheon,Baratheon,Baratheon,win,1,siege,5000,20000,1,The Stormlands
+17,Joffrey/Tommen Baratheon,Robb Stark,Lannister,Tully,loss,0,pitched battle,20000,10000,1,The Riverlands
+18,Robb Stark,Joffrey/Tommen Baratheon,Stark,Lannister,win,1,ambush,100,100,1,The Riverlands
+19,Robb Stark,Joffrey/Tommen Baratheon,Stark,Lannister,win,1,ambush,6000,,1,The Westerlands
+20,Stannis Baratheon,Joffrey/Tommen Baratheon,Baratheon,Lannister,loss,0,pitched battle,21000,7250,1,The Crownlands
+21,Robb Stark,Joffrey/Tommen Baratheon,Darry,Lannister,win,1,siege,,,1,The Riverlands
+22,Robb Stark,Joffrey/Tommen Baratheon,Stark,Lannister,loss,0,pitched battle,3000,,1,The Crownlands
+23,,,Brotherhood without Banners,Brave Companions,win,1,pitched battle,,,1,The Riverlands
+24,Joffrey/Tommen Baratheon,Robb Stark,Lannister,Stark,win,1,pitched battle,,6000,,The Riverlands
+25,Joffrey/Tommen Baratheon,,Lannister,Brave Companions,win,1,pitched battle,,,1,The Riverlands
+26,Joffrey/Tommen Baratheon,Robb Stark,Frey,Stark,win,1,ambush,3500,3500,1,The Riverlands
+26,Joffrey/Tommen Baratheon,Robb Stark,Bolton,Stark,win,1,ambush,3500,3500,1,The Riverlands
+27,Robb Stark,Joffrey/Tommen Baratheon,Frey,Mallister,win,1,siege,,,1,The Riverlands
+28,Stannis Baratheon,Mance Rayder,Free folk,Night's Watch,loss,0,siege,100000,1240,0,Beyond the Wall
+28,Stannis Baratheon,Mance Rayder,Thenns,Night's Watch,loss,0,siege,100000,1240,0,Beyond the Wall
+28,Stannis Baratheon,Mance Rayder,Giants,Night's Watch,loss,0,siege,100000,1240,0,Beyond the Wall
+28,Stannis Baratheon,Mance Rayder,Free folk,Baratheon,loss,0,siege,100000,1240,0,Beyond the Wall
+28,Stannis Baratheon,Mance Rayder,Thenns,Baratheon,loss,0,siege,100000,1240,0,Beyond the Wall
+28,Stannis Baratheon,Mance Rayder,Giants,Baratheon,loss,0,siege,100000,1240,0,Beyond the Wall
+29,Joffrey/Tommen Baratheon,Balon/Euron Greyjoy,Bolton,Greyjoy,win,1,siege,,,0,The North
+30,,,Brave Companions,,win,1,razing,,,0,The Riverlands
+31,Stannis Baratheon,Balon/Euron Greyjoy,Baratheon,Greyjoy,win,1,pitched battle,4500,200,0,The North
+31,Stannis Baratheon,Balon/Euron Greyjoy,Karstark,Greyjoy,win,1,pitched battle,4500,200,0,The North
+31,Stannis Baratheon,Balon/Euron Greyjoy,Mormont,Greyjoy,win,1,pitched battle,4500,200,0,The North
+31,Stannis Baratheon,Balon/Euron Greyjoy,Glover,Greyjoy,win,1,pitched battle,4500,200,0,The North
+32,Balon/Euron Greyjoy,Joffrey/Tommen Baratheon,Greyjoy,Tyrell,win,1,pitched battle,,,0,The Reach
+33,Balon/Euron Greyjoy,Joffrey/Tommen Baratheon,Greyjoy,Tyrell,win,1,razing,,,0,The Reach
+34,Joffrey/Tommen Baratheon,Stannis Baratheon,Baratheon,Baratheon,win,1,siege,,200,0,The Stormlands
+35,Joffrey/Tommen Baratheon,Stannis Baratheon,Baratheon,Baratheon,win,1,siege,2000,,0,The Stormlands
+36,Joffrey/Tommen Baratheon,Robb Stark,Lannister,Tully,win,1,siege,3000,,0,The Riverlands
+36,Joffrey/Tommen Baratheon,Robb Stark,Frey,Tully,win,1,siege,3000,,0,The Riverlands
+37,Joffrey/Tommen Baratheon,Robb Stark,Bracken,Blackwood,win,1,siege,1500,,0,The Riverlands
+37,Joffrey/Tommen Baratheon,Robb Stark,Lannister,Blackwood,win,1,siege,1500,,0,The Riverlands
+38,Stannis Baratheon,Joffrey/Tommen Baratheon,Baratheon,Bolton,,,,5000,8000,0,The North
+38,Stannis Baratheon,Joffrey/Tommen Baratheon,Karstark,Bolton,,,,5000,8000,0,The North
+38,Stannis Baratheon,Joffrey/Tommen Baratheon,Mormont,Bolton,,,,5000,8000,0,The North
+38,Stannis Baratheon,Joffrey/Tommen Baratheon,Glover,Bolton,,,,5000,8000,0,The North
+38,Stannis Baratheon,Joffrey/Tommen Baratheon,Baratheon,Frey,,,,5000,8000,0,The North
+38,Stannis Baratheon,Joffrey/Tommen Baratheon,Karstark,Frey,,,,5000,8000,0,The North
+38,Stannis Baratheon,Joffrey/Tommen Baratheon,Mormont,Frey,,,,5000,8000,0,The North
+38,Stannis Baratheon,Joffrey/Tommen Baratheon,Glover,Frey,,,,5000,8000,0,The North
