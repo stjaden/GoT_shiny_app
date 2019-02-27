@@ -30,7 +30,7 @@ ui <- fluidPage(
                         sidebarPanel(
                           selectInput("House", 
                                       "Select Houses for Alliance:",
-                                      choices = c("purple","blue","orange"))
+                                      choices = c("Stark","Lannister","Baratheon","Tully","Greyjoy","Frey","Free folk","Darry","Thenns","Bolton","Brotherhood without Banners","Giants","Brave Companions","Karstark","Mormont","Glover","Tyrell","Blackwood"))
                         ),
                         
                         # PLACEHOLDER: Show a plot of the generated distribution
