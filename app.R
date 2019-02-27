@@ -3,15 +3,16 @@ library(tidyverse)
 library(shinythemes)
 library(gridExtra)
 
-# Define UI for application that draws a histogram
+# User Interface
 ui <- fluidPage(
   theme = shinytheme("flatly"),
   
-  # Application title
+  # Title
   titlePanel("White Walker WIPEOUT"),
   
    navbarPage("Winter is Coming",
              
+              #Introduction Tab
              tabPanel("Introduction",
                       h1("Winter is Coming"),
                       h2("And Only You Can Stop It"),
@@ -23,21 +24,25 @@ ui <- fluidPage(
                       
                       ),
              
+             #Exploration and Alliances Tab
              tabPanel("Explore House Statistics and Pick Your Alliances",
                       
-                      # PLACEHOLDER: Sidebar with a slider input for number of bins 
+                      # Sidebar: Sidebar with 3 house selections for alliance
                       sidebarLayout(
                         sidebarPanel(
                           selectInput("House", 
                                       "Select House 1 for Alliance:",
-                                      choices = c("Stark","Lannister","Baratheon","Tully","Greyjoy","Frey","Free folk","Darry","Thenns","Bolton","Brotherhood without Banners","Giants","Brave Companions","Karstark","Mormont","Glover","Tyrell","Blackwood")),
+                                      choices = c("Stark","Lannister","Baratheon","Tully","Greyjoy","Frey","Free folk","Darry","Thenns","Bolton","Brotherhood without Banners","Giants","Brave Companions","Karstark","Mormont","Glover","Tyrell","Blackwood")
+                                      ),
                           selectInput("House",
                                       "Select House 2 for Alliance:",
-                                      choices = c("Stark","Lannister","Baratheon","Tully","Greyjoy","Frey","Free folk","Darry","Thenns","Bolton","Brotherhood without Banners","Giants","Brave Companions","Karstark","Mormont","Glover","Tyrell","Blackwood")),
+                                      choices = c("Stark","Lannister","Baratheon","Tully","Greyjoy","Frey","Free folk","Darry","Thenns","Bolton","Brotherhood without Banners","Giants","Brave Companions","Karstark","Mormont","Glover","Tyrell","Blackwood")
+                                      ),
                           selectInput("House",
                                       "Select House 3 for Alliance",
-                                      choices = c("Stark","Lannister","Baratheon","Tully","Greyjoy","Frey","Free folk","Darry","Thenns","Bolton","Brotherhood without Banners","Giants","Brave Companions","Karstark","Mormont","Glover","Tyrell","Blackwood"))
-                        ),
+                                      choices = c("Stark","Lannister","Baratheon","Tully","Greyjoy","Frey","Free folk","Darry","Thenns","Bolton","Brotherhood without Banners","Giants","Brave Companions","Karstark","Mormont","Glover","Tyrell","Blackwood")
+                                      )
+                                    ),
                         
                         # PLACEHOLDER: Show a plot of the generated distribution
                         mainPanel(
@@ -45,17 +50,24 @@ ui <- fluidPage(
                         )
                       )),
              
-             
+             #Battle Tab
              tabPanel("Battle",
                       
                       # pLACEHOLDER: Sidebar with a slider input for number of bins 
                       sidebarLayout(
                         sidebarPanel(
+                          sliderInput("ww_army_size",
+                                      "White Walker Army Size",
+                                      min = 1,
+                                      max = 150000,
+                                      value = 100000),
+                          sliderInput("living_army_size",
+                                      "Alliance Army Size",
+                                      min = 1,
+                                      max = 150000,
+                                      value = 50000)
                           
-                          radioButtons("scattercolor", 
-                                      "Select scatterplot color:",
-                                      choices = c("red","blue","gray50"))
-                        ),
+                                    ),
                         
                         # pLACEHOLDER: Show a plot of the generated distribution
                         mainPanel(
