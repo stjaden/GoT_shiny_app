@@ -28,14 +28,8 @@ ui <- fluidPage(
                       # PLACEHOLDER: Sidebar with a slider input for number of bins 
                       sidebarLayout(
                         sidebarPanel(
-                          sliderInput("bins", 
-                                      "select bins:",
-                                      min = 1,
-                                      max = 50,
-                                      value = 30),
-                          
-                          selectInput("color", 
-                                      "Select histogram color:",
+                          selectInput("House", 
+                                      "Select Houses for Alliance:",
                                       choices = c("purple","blue","orange"))
                         ),
                         
