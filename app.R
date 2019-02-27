@@ -2,6 +2,7 @@ library(shiny)
 library(tidyverse)
 library(shinythemes)
 library(gridExtra)
+battle <- read_csv("battles_updated_2_25_2019.csv")
 
 # User Interface
 ui <- fluidPage(
