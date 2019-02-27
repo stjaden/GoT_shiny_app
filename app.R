@@ -31,15 +31,15 @@ ui <- fluidPage(
                       # Sidebar: Sidebar with 3 house selections for alliance
                       sidebarLayout(
                         sidebarPanel(
-                          selectInput("House", 
+                          selectInput("house1", 
                                       "Select House 1 for Alliance:",
                                       choices = c("Stark","Lannister","Baratheon","Tully","Greyjoy","Frey","Free folk","Darry","Thenns","Bolton","Brotherhood without Banners","Giants","Brave Companions","Karstark","Mormont","Glover","Tyrell","Blackwood")
                                       ),
-                          selectInput("House",
+                          selectInput("house2",
                                       "Select House 2 for Alliance:",
                                       choices = c("Stark","Lannister","Baratheon","Tully","Greyjoy","Frey","Free folk","Darry","Thenns","Bolton","Brotherhood without Banners","Giants","Brave Companions","Karstark","Mormont","Glover","Tyrell","Blackwood")
                                       ),
-                          selectInput("House",
+                          selectInput("house3",
                                       "Select House 3 for Alliance",
                                       choices = c("Stark","Lannister","Baratheon","Tully","Greyjoy","Frey","Free folk","Darry","Thenns","Bolton","Brotherhood without Banners","Giants","Brave Companions","Karstark","Mormont","Glover","Tyrell","Blackwood")
                                       )
@@ -47,7 +47,7 @@ ui <- fluidPage(
                         
                         # PLACEHOLDER: Show a plot of the generated distribution
                         mainPanel(
-                          plotOutput("distPlot")
+                          plotOutput("battle_type_hist")
                         )
                       )),
              
@@ -88,10 +88,10 @@ ui <- fluidPage(
 
 
 
-# pLACEHOLDER: Define server logic required to draw a histogram
+# Server
 server <- function(input, output) {
   
-  output$distPlot <- renderPlot({
+  output$battle_type_hist <- renderPlot({
     # generate bins based on input$bins from ui.R
     x    <- faithful[, 2] 
     bins <- seq(min(x), max(x), length.out = input$bins + 1)
