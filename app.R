@@ -29,7 +29,13 @@ ui <- fluidPage(
                       sidebarLayout(
                         sidebarPanel(
                           selectInput("House", 
-                                      "Select Houses for Alliance:",
+                                      "Select House 1 for Alliance:",
+                                      choices = c("Stark","Lannister","Baratheon","Tully","Greyjoy","Frey","Free folk","Darry","Thenns","Bolton","Brotherhood without Banners","Giants","Brave Companions","Karstark","Mormont","Glover","Tyrell","Blackwood")),
+                          selectInput("House",
+                                      "Select House 2 for Alliance:",
+                                      choices = c("Stark","Lannister","Baratheon","Tully","Greyjoy","Frey","Free folk","Darry","Thenns","Bolton","Brotherhood without Banners","Giants","Brave Companions","Karstark","Mormont","Glover","Tyrell","Blackwood")),
+                          selectInput("House",
+                                      "Select House 3 for Alliance",
                                       choices = c("Stark","Lannister","Baratheon","Tully","Greyjoy","Frey","Free folk","Darry","Thenns","Bolton","Brotherhood without Banners","Giants","Brave Companions","Karstark","Mormont","Glover","Tyrell","Blackwood"))
                         ),
                         
