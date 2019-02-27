@@ -1,13 +1,14 @@
 library(shiny)
 library(tidyverse)
 library(shinythemes)
+library(gridExtra)
 
 # Define UI for application that draws a histogram
 ui <- fluidPage(
-  theme = shinytheme("cerulean"),
+  theme = shinytheme("flatly"),
   
   # Application title
-  titlePanel("White Walker wipeout"),
+  titlePanel("White Walker WIPEOUT"),
   
    navbarPage("Winter is Coming",
              
@@ -16,17 +17,19 @@ ui <- fluidPage(
                       h2("And Only You Can Stop It"),
                       p("The White Walkers have broken through the wall and are descending on the citizens of Westeros. Only you can can stop the army of the dead, but first you must decide where, how, and with whom you will fight them. Choose your alliances carefully and decide on a location to make your stand. Devise a battle plan and find out what you chances of victory are. Winter is coming..."),
                       h3("Data Summary"),
-                      p("INSERT DATA SUMMARY HERE")
+                      p("Data used in this app was adapted from Chris Albon's War of the Five Kings data set. 
+                        The original contains a dataset of the battles in the War of the Five Kingsfrom George R.R. Martin's A Song Of Ice And Fire series.
+                        Original data can be found at: https://github.com/chrisalbon/war_of_the_five_kings_dataset")
                       
                       ),
              
-             tabPanel("Explore/Pick",
+             tabPanel("Explore House Statistics and Pick Your Alliances",
                       
                       # PLACEHOLDER: Sidebar with a slider input for number of bins 
                       sidebarLayout(
                         sidebarPanel(
-                          sliderInput("bins",
-                                      "Number of bins:",
+                          sliderInput("bins", 
+                                      "select bins:",
                                       min = 1,
                                       max = 50,
                                       value = 30),
