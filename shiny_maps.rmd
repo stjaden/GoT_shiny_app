@@ -1,0 +1,151 @@
+---
+title: "shiny_maps"
+author: "Alexander Stejskal"
+date: "February 28, 2019"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+
+```{r}
+library(tidyverse)
+library(sf)
+library(leaflet)
+library(tmap)
+library(editData)
+library(forcats)
+library(dplyr)
+```
+
+
+```{r}
+#house_stats <- read_excel("~/GOT/GOT_R/shiny_maps/house_stats.xlsx")
+
+#battle_location <- read_excel("~/GOT/GOT_R/shiny_maps/battle_location.xlsx")
+
+#battle_location_map2 <- read_excel("~/GOT/GOT_R/shiny_maps/battle_location_map2.xlsx")
+
+```
+
+
+
+```{r}
+got_region <- st_read(dsn = ".", layer = "Political")
+```
+
+Replace NA with "Beyond the Wall"
+```{r}
+got_region2 <- replace_na(got_region, "Beyond the Wall")
+
+got_region
+```
+
+
+```{r}
+region <- got_region %>% 
+  select(name, ClaimedBy)
+
+plot(region)
+```
+
+
+```{r}
+region_df <- full_join(got_region, battle_location_map2)
+```
+
+
+
+
+
+
+
+
+
+
+
+ca_df <- full_join(ca_land, ca_pop_inc) %>% 
+  select(NAME, MedFamilyIncome)
+
+
+
+
+
+
+
+
+
+
+Beyond_Wall,	Crownlands,	North,	Reach,	Riverlands,	Stormlands,	Westerlands
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+ca_land <- ca_counties %>% 
+  select(NAME, ALAND)
+# plot(ca_land)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

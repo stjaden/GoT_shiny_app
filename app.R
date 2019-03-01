@@ -25,23 +25,23 @@ ui <- fluidPage(
           
                       ,
              
-             #Exploration and Alliances Tab
-             tabPanel("Explore House Statistics and Pick Your Alliances",
+             #Explore Alliances Tab
+             tabPanel("Explore Alliances",
                       
                       # Sidebar: Sidebar with 3 house selections for alliance
                       sidebarLayout(
                         sidebarPanel(
-                          selectInput("house1", 
-                                      "Select House 1 for Alliance:",
-                                      choices = c("Stark","Lannister","Baratheon","Tully","Greyjoy","Frey","Free folk","Darry","Thenns","Bolton","Brotherhood without Banners","Giants","Brave Companions","Karstark","Mormont","Glover","Tyrell","Blackwood")
+                          selectInput("house1_explore", 
+                                      "Explore House 1 Battle Stats:",
+                                      choices = c("Stark","Lannister","Baratheon","Tully","Greyjoy","Frey","Bolton","Karstark","Mormont","Glover","Tyrell")
                                       ),
-                          selectInput("house2",
-                                      "Select House 2 for Alliance:",
-                                      choices = c("Stark","Lannister","Baratheon","Tully","Greyjoy","Frey","Free folk","Darry","Thenns","Bolton","Brotherhood without Banners","Giants","Brave Companions","Karstark","Mormont","Glover","Tyrell","Blackwood")
+                          selectInput("house2_explore",
+                                      "Explore House 2 Battle Stats:",
+                                      choices = c("Stark","Lannister","Baratheon","Tully","Greyjoy","Frey","Bolton","Karstark","Mormont","Glover","Tyrell")
                                       ),
-                          selectInput("house3",
-                                      "Select House 3 for Alliance",
-                                      choices = c("Stark","Lannister","Baratheon","Tully","Greyjoy","Frey","Free folk","Darry","Thenns","Bolton","Brotherhood without Banners","Giants","Brave Companions","Karstark","Mormont","Glover","Tyrell","Blackwood")
+                          selectInput("house3_explore",
+                                      "Explore House 3 Battle Stats",
+                                      choices = c("Stark","Lannister","Baratheon","Tully","Greyjoy","Frey","Bolton","Karstark","Mormont","Glover","Tyrell")
                                       )
                                     ),
                         
@@ -51,10 +51,10 @@ ui <- fluidPage(
                         )
                       )),
              
-             #Battle Tab
-             tabPanel("Battle",
+             #Pick Alliances Tab
+             tabPanel("Pick Alliances",
                       
-                      # pLACEHOLDER: Sidebar with a slider input for number of bins 
+                      # Sidebar: Sidebar with a slider for army sizes and radio buttons for picking alliance 
                       sidebarLayout(
                         sidebarPanel(
                           sliderInput("ww_army_size",
@@ -66,19 +66,38 @@ ui <- fluidPage(
                                       "Alliance Army Size",
                                       min = 1,
                                       max = 150000,
-                                      value = 50000)
-                          
+                                      value = 50000),
+                          selectInput("house1_pick", 
+                                      "Select House 1 for Alliance:",
+                                      choices = c("Stark","Lannister","Baratheon","Tully","Greyjoy","Frey","Bolton","Karstark","Mormont","Glover","Tyrell")
+                          ),
+                          selectInput("house2_pick",
+                                      "Select House 2 for Alliance:",
+                                      choices = c("Stark","Lannister","Baratheon","Tully","Greyjoy","Frey","Bolton","Karstark","Mormont","Glover","Tyrell")
+                          ),
+                          selectInput("house3_pick",
+                                      "Select House 3 for Alliance",
+                                      choices = c("Stark","Lannister","Baratheon","Tully","Greyjoy","Frey","Bolton","Karstark","Mormont","Glover","Tyrell")
+                          )
                                     ),
                         
                         # pLACEHOLDER: Show a plot of the generated distribution
                         mainPanel(
                           plotOutput("scatter")
                         )
+                      )),
+             #Battle Results
+             tabPanel("Battle Results",
+                      
+                      # PLACEHOLDER: Show a plot of the generated distribution
+                        mainPanel(
+                          plotOutput("battle_type_hist")
+                        )
                       ))
              
   )
   
-)
+
 
 
 
