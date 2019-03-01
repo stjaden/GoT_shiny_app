@@ -22,8 +22,8 @@ ui <- fluidPage(
                       p("Data used in this app was adapted from Chris Albon's War of the Five Kings data set. 
                         The original contains a dataset of the battles in the War of the Five Kingsfrom George R.R. Martin's A Song Of Ice And Fire series.
                         Original data can be found at: https://github.com/chrisalbon/war_of_the_five_kings_dataset")
-                      
-                      ),
+          
+                      ,
              
              #Exploration and Alliances Tab
              tabPanel("Explore House Statistics and Pick Your Alliances",
