@@ -85,11 +85,19 @@ ui <- fluidPage(
                         mainPanel(
                           plotOutput("scatter")
                         )
+                      )),
+             #Battle Results
+             tabPanel("Battle Results",
+                      
+                      # PLACEHOLDER: Show a plot of the generated distribution
+                        mainPanel(
+                          plotOutput("battle_type_hist")
+                        )
                       ))
              
   )
   
-)
+
 
 
 
