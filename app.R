@@ -21,8 +21,10 @@ ui <- fluidPage(
                       h3("Data Summary"),
                       p("Data used in this app was adapted from Chris Albon's War of the Five Kings data set. 
                         The original contains a dataset of the battles in the War of the Five Kingsfrom George R.R. Martin's A Song Of Ice And Fire series.
-                        Original data can be found at: https://github.com/chrisalbon/war_of_the_five_kings_dataset")
-          
+                        Original data can be found at: https://github.com/chrisalbon/war_of_the_five_kings_dataset"),
+                      img(src = "winter-is-here.jpg")
+             )
+                      
                       ,
              
              #Explore Alliances Tab
