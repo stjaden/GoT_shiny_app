@@ -23,19 +23,19 @@ library(tidyverse)
 library(readxl)
 
 
-house_stats <- read_excel("house_stats.xlsx")
+house_stats_summary <- read_excel("house_stats.xlsx")
 
 #create data frame for % wins
-house_stats <-house_stats %>% 
+house_stats_summary <-house_stats_summary %>% 
   mutate(percent_win = ((wins/total_battles)*100))
 
 
-house_stats2 <- read_excel("house_stats.xlsx", 
+house_stats <- read_excel("house_stats.xlsx", 
     sheet = "Sheet1")
 
-house_stats2$outcome <- as.factor(house_stats2$outcome)
-house_stats2$battle_type <- as.factor(house_stats2$battle_type)
-house_stats2$house <- as.factor(house_stats2$house)
+house_stats$outcome <- as.factor(house_stats$outcome)
+house_stats$battle_type <- as.factor(house_stats$battle_type)
+house_stats$house <- as.factor(house_stats$house)
 
 
 ```
@@ -45,13 +45,13 @@ Baratheon
 
 
 #create data frame with just baratheon info
-baratheon2 <- house_stats2 %>% 
+baratheon <- house_stats %>% 
   filter(house == "Baratheon")
 
 
 #baratheon outcomes by battle type
 
-ggplot(baratheon2, aes(x=battle_type))+
+ggplot(baratheon, aes(x=battle_type))+
   geom_bar(aes(fill= outcome), position = "dodge") +
   theme_classic() +
   theme(legend.position = "")+
