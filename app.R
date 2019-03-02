@@ -11,9 +11,9 @@ ui <- fluidPage(
   # Title
   titlePanel("White Walker WIPEOUT"),
   
-   navbarPage("Winter is Coming",
+  navbarPage("Winter is Coming",
              
-              #Introduction Tab
+             #Introduction Tab
              tabPanel("Introduction",
                       h1("Winter is Coming"),
                       h2("And Only You Can Stop It"),
@@ -23,32 +23,47 @@ ui <- fluidPage(
                         The original contains a dataset of the battles in the War of the Five Kingsfrom George R.R. Martin's A Song Of Ice And Fire series.
                         Original data can be found at: https://github.com/chrisalbon/war_of_the_five_kings_dataset"),
                       img(src = "winter-is-here.jpg")
-             )
-                      
-                      ,
+                      )
+             
+             ,
              
              #Explore Alliances Tab
              tabPanel("Explore Alliances",
-                      
+                        
                       # Sidebar: Sidebar with 3 house selections for alliance
                       sidebarLayout(
                         sidebarPanel(
                           selectInput("house1_explore", 
                                       "Explore House 1 Battle Stats:",
                                       choices = c("Stark","Lannister","Baratheon","Tully","Greyjoy","Frey","Bolton","Karstark","Mormont","Glover","Tyrell")
-                                      ),
+                          ),
                           selectInput("house2_explore",
                                       "Explore House 2 Battle Stats:",
                                       choices = c("Stark","Lannister","Baratheon","Tully","Greyjoy","Frey","Bolton","Karstark","Mormont","Glover","Tyrell")
-                                      ),
+                          ),
                           selectInput("house3_explore",
                                       "Explore House 3 Battle Stats",
                                       choices = c("Stark","Lannister","Baratheon","Tully","Greyjoy","Frey","Bolton","Karstark","Mormont","Glover","Tyrell")
-                                      )
-                                    ),
+                          )
+                        ),
                         
                         # PLACEHOLDER: Show a plot of the generated distribution
                         mainPanel(
+                          #Fluid row controls the layout in the main panel 
+                          fluidRow(
+                            column(width = 4,
+                                   "House 1 "
+                            ),
+                            column(width = 4,
+                                   "House 2"
+                            ),
+                            column(width = 4,
+                                   "House 3 "
+                            )
+                            
+                            ),  
+                          
+                          
                           plotOutput("battle_type_hist")
                         )
                       )),
@@ -81,7 +96,7 @@ ui <- fluidPage(
                                       "Select House 3 for Alliance",
                                       choices = c("Stark","Lannister","Baratheon","Tully","Greyjoy","Frey","Bolton","Karstark","Mormont","Glover","Tyrell")
                           )
-                                    ),
+                        ),
                         
                         # pLACEHOLDER: Show a plot of the generated distribution
                         mainPanel(
@@ -92,13 +107,13 @@ ui <- fluidPage(
              tabPanel("Battle Results",
                       
                       # PLACEHOLDER: Show a plot of the generated distribution
-                        mainPanel(
-                          plotOutput("battle_type_hist")
-                        )
-                      ))
-             
-  )
+                      mainPanel(
+                        plotOutput("battle_type_hist")
+                      )
+             ))
   
+  )
+
 
 
 
@@ -132,4 +147,5 @@ server <- function(input, output) {
 
 # Run the application 
 shinyApp(ui = ui, server = server)
+
 
