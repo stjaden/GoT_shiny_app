@@ -1,6 +1,7 @@
 library(shiny)
 library(tidyverse)
 library(shinythemes)
+library(shinydashboard)
 library(gridExtra)
 battle <- read_csv("battles_updated_2_25_2019.csv")
 
@@ -50,20 +51,49 @@ ui <- fluidPage(
                         # PLACEHOLDER: Show a plot of the generated distribution
                         mainPanel(
                           #Fluid row controls the layout in the main panel 
+                          
+                          fluidRow(
+                            column(width = 12,
+                                   "Describe results below")
+                          ), 
+                          
+                          
                           fluidRow(
                             column(width = 4,
-                                   "House 1 "
-                            ),
+                                   "House 1 "),
                             column(width = 4,
-                                   "House 2"
-                            ),
+                                   "House 2"),
                             column(width = 4,
-                                   "House 3 "
-                            )
-                            
+                                   "House 3")
+
                             ),  
                           
+                         
                           
+                          
+                          
+                          fluidRow(
+                            column(4, wellPanel(p("Battle Stats 1"))),
+                            column(4, wellPanel(p("Battle Stats 2"))),
+                            column(4, wellPanel(p("Battle Stats 3")))    
+                                   
+                                   ),
+                          
+                          fluidRow(
+                            column(4, wellPanel(p("Army Stats 1"))),
+                            column(4, wellPanel(p("Army Stats 2"))),
+                            column(4, wellPanel(p("Army Stats 3")))    
+                            
+                          ),
+                          
+                          fluidRow(
+                            column(4, wellPanel(p("Map 1"))),
+                            column(4, wellPanel(p("Map 2"))),
+                            column(4, wellPanel(p("Map 3")))    
+                            
+                          ),
+                          
+                                 
                           plotOutput("battle_type_hist")
                         )
                       )),
@@ -143,6 +173,18 @@ server <- function(input, output) {
       geom_smooth(method = "lm", se = FALSE)
     
   })
+  
+  output$progressBox <- renderValueBox({
+    valueBox(
+      paste0(25 + input$count, "%"), "Progress", icon = icon("list"),
+      color = "purple"
+    )
+  })
+  
+  
+  
+  
+  
 }
 
 # Run the application 
