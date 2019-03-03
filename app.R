@@ -3,9 +3,18 @@ library(tidyverse)
 library(shinythemes)
 library(shinydashboard)
 library(gridExtra)
-battle <- read_csv("battles_updated_2_25_2019.csv")
+library(readr)
+library(readxl)
 
-# User Interface
+#make house_stats data frame
+house_stats <- read_excel("house_stats.xlsx", 
+                          sheet = "Sheet1")
+
+house_stats$outcome <- as.factor(house_stats$outcome)
+house_stats$battle_type <- as.factor(house_stats$battle_type)
+house_stats$house <- as.factor(house_stats$house)
+
+#################### User Interface
 ui <- fluidPage(
   theme = shinytheme("flatly"),
   
@@ -36,7 +45,7 @@ ui <- fluidPage(
                         sidebarPanel(
                           selectInput("house1_explore", 
                                       "Explore House 1 Battle Stats:",
-                                      choices = c("Stark","Lannister","Baratheon","Tully","Greyjoy","Frey","Bolton","Karstark","Mormont","Glover","Tyrell")
+                                      choices = c(Stark="Stark",Lannister="Lannister",Baratheon="Baratheon",Tully="Tully",Greyjoy="Greyjoy",Frey="Frey",Bolton="Bolton",Karstark="Karstark",Mormont="Mormont",Glover="Glover",Tyrell="Tyrell")
                           ),
                           selectInput("house2_explore",
                                       "Explore House 2 Battle Stats:",
@@ -94,7 +103,7 @@ ui <- fluidPage(
                           ),
                           
                                  
-                          plotOutput("battle_type_hist")
+                          plotOutput("battle_type_hist1")
                         )
                       )),
              
@@ -154,16 +163,24 @@ ui <- fluidPage(
 
 
 
-# Server
+########################## Server
 server <- function(input, output) {
   
-  output$battle_type_hist <- renderPlot({
-    # generate bins based on input$bins from ui.R
-    x    <- faithful[, 2] 
-    bins <- seq(min(x), max(x), length.out = input$bins + 1)
+  #Create battle type histogram 1 on Explore tab based on house 1 selection
+  output$battle_type_hist1 <- renderPlot({
     
-    # draw the histogram with the specified number of bins
-    hist(x, breaks = bins, col = input$color, border = 'white')
+    battle_type_data <- house_stats %>%
+      filter(house == input$house1_explore)
+    
+    ggplot(battle_type_data, aes(x=battle_type))+
+      geom_bar(aes(fill= outcome), position = "dodge") +
+      theme_classic() +
+      theme(legend.position = "")+
+      scale_fill_manual(values = c("red", "darkgreen")) +
+      scale_y_continuous(expand = c(0, 0), limits = c(0, 6), breaks = c(0,1,2,3,4,5,6)) +
+      ylab("")  +
+      xlab("") +
+      ggtitle(input$house1_explore)
   })
   
   output$scatter <- renderPlot({
