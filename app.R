@@ -68,44 +68,35 @@ ui <- fluidPage(
                           
                           # Column Headers
                           fluidRow(
-                            column(width = 4,
+                            column(width = 6,
                                    "House 1 "),
-                            column(width = 4,
-                                   "House 2"),
-                            column(width = 4,
-                                   "House 3")
-
+                            column(width = 6,
+                                   "House 2")
                             ),  
                           
                          
                           # Battle type stats graphs
                           fluidRow(
-                            column(4, wellPanel(p("Battle Stats 1"))),
-                            column(4, wellPanel(p("Battle Stats 2"))),
-                            column(4, wellPanel(p("Battle Stats 3")))    
-                                   
-                                   ),
+                            column(6, plotOutput("battle_type_hist1")),
+                            column(6, wellPanel(p("Battle Stats 2")))
+                            ),
                           
                           
                           # Army size tables
                           fluidRow(
-                            column(4, wellPanel(p("Army Stats 1"))),
-                            column(4, wellPanel(p("Army Stats 2"))),
-                            column(4, wellPanel(p("Army Stats 3")))    
-                            
+                            column(6, wellPanel(p("Army Stats 1"))),
+                            column(6, wellPanel(p("Army Stats 2")))
+
                           ),
                           
                           fluidRow(
-                            column(4, wellPanel(p("Map 1"))),
-                            column(4, wellPanel(p("Map 2"))),
-                            column(4, wellPanel(p("Map 3")))    
+                            column(6, wellPanel(p("Map 1"))),
+                            column(6, wellPanel(p("Map 2")))
+                          )
                             
-                          ),
-                          
-                                 
-                          plotOutput("battle_type_hist1")
-                        )
-                      )),
+                        
+                        
+                      ))),
              
              #Pick Alliances Tab
              tabPanel("Pick Alliances",
@@ -171,16 +162,25 @@ server <- function(input, output) {
     
     battle_type_data <- house_stats %>%
       filter(house == input$house1_explore)
+  
     
     ggplot(battle_type_data, aes(x=battle_type))+
-      geom_bar(aes(fill= outcome), position = "dodge") +
+      geom_bar(aes(fill= outcome), position = "stack") +
       theme_classic() +
-      theme(legend.position = "")+
+      theme(legend.position = "", 
+            title = element_text(size=20, face = "bold"),
+            plot.title = element_text(hjust = 0.5),
+            axis.text.x = element_text(size = 15),
+            axis.text.y = element_text(size = 15)
+      ) +
       scale_fill_manual(values = c("red", "darkgreen")) +
-      scale_y_continuous(expand = c(0, 0), limits = c(0, 6), breaks = c(0,1,2,3,4,5,6)) +
+      scale_y_continuous(expand = c(0, 0), limits = c(0, 6), breaks = c(0,1,2,3,4,5)) +
       ylab("")  +
       xlab("") +
-      ggtitle(input$house1_explore)
+      ggtitle(input$house1_explore)+
+      coord_flip()
+    
+    
   })
   
   output$scatter <- renderPlot({
