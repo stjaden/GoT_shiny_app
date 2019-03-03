@@ -57,7 +57,7 @@ ui <- fluidPage(
                                    "Describe results below")
                           ), 
                           
-                          
+                          # Column Headers
                           fluidRow(
                             column(width = 4,
                                    "House 1 "),
@@ -69,9 +69,7 @@ ui <- fluidPage(
                             ),  
                           
                          
-                          
-                          
-                          
+                          # Battle type stats graphs
                           fluidRow(
                             column(4, wellPanel(p("Battle Stats 1"))),
                             column(4, wellPanel(p("Battle Stats 2"))),
@@ -79,6 +77,8 @@ ui <- fluidPage(
                                    
                                    ),
                           
+                          
+                          # Army size tables
                           fluidRow(
                             column(4, wellPanel(p("Army Stats 1"))),
                             column(4, wellPanel(p("Army Stats 2"))),
@@ -174,12 +174,8 @@ server <- function(input, output) {
     
   })
   
-  output$progressBox <- renderValueBox({
-    valueBox(
-      paste0(25 + input$count, "%"), "Progress", icon = icon("list"),
-      color = "purple"
-    )
-  })
+
+
   
   
   
