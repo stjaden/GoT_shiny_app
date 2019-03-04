@@ -18,6 +18,7 @@ library(tmap)
 library(plotly)
 library(leaflet)
 library(htmltools)
+library(readxl)
 #library(editData)
 #library(forcats)
 #library(dplyr)
@@ -29,7 +30,7 @@ library(htmltools)
 
 #battle_location <- read_excel("~/GOT/GOT_R/shiny_maps/battle_location.xlsx")
 
-#battle_location_map2 <- read_excel("~/GOT/GOT_R/shiny_maps/battle_location_map2.xlsx")
+battle_location_map2 <- read_excel("battle_location_map2.xlsx")
 
 ```
 
@@ -63,14 +64,30 @@ plot(region)
 
 ```{r}
 region_df <- full_join(got_region, battle_location_map2)
+
+
 ```
 
 
 House dataframes
 ```{r}
+
+house <- region_df %>% 
+  dplyr::select(name, Baratheon) %>% 
+  replace_na(list(name = "Beyond the Wall", Baratheon = "0"))
+
+df_baratheon$Baratheon <- as.numeric(as.character(df_baratheon$Baratheon))
+
+
+
+
+
+
+
 df_baratheon <- region_df %>% 
   dplyr::select(name, Baratheon) %>% 
   replace_na(list(name = "Beyond the Wall", Baratheon = "0"))
+
 df_baratheon$Baratheon <- as.numeric(as.character(df_baratheon$Baratheon))
 
 df_bolton <- region_df %>% 

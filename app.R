@@ -6,15 +6,17 @@ library(gridExtra)
 library(readr)
 library(readxl)
 library(DT)
+library(leaflet)
 
 #make house_stats data frame
 house_stats <- read_excel("house_stats.xlsx", 
                           sheet = "Sheet1")
 
-
 house_stats$outcome <- as.factor(house_stats$outcome)
 house_stats$battle_type <- as.factor(house_stats$battle_type)
 house_stats$house <- as.factor(house_stats$house)
+
+
 
 #################### User Interface
 ui <- fluidPage(
@@ -84,10 +86,11 @@ ui <- fluidPage(
                         
                         # Regional battle experience
                         fluidRow(
-                          column(4, wellPanel(p("Map 1"))),
-                          column(4, wellPanel(p("Map 2"))),
-                          column(4, wellPanel(p("Map 2")))
+                          column(4, wellPanel(p("map_1"))),
+                          column(4, wellPanel(p("map_2"))),
+                          column(4, wellPanel(p("map_3")))
                         ),
+                        
                         
                         # Army size boxplot
                         fluidRow(
@@ -234,8 +237,23 @@ server <- function(input, output) {
     
   })
   
+  #create a map of regional experience based on house input
+
   
-# create army size boxplot
+
+
+    
+    
+    
+    
+    
+  })
+  
+  
+  
+  
+  
+  # create army size boxplot
  
   output$army_boxplot <- renderPlot({
     
