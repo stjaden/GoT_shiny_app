@@ -49,7 +49,7 @@ got_region$name <- ifelse(is.na(got_region2$name),
 
 got_region %>% 
   replace_na(list(name = "Beyond the Wall"))
-```
+ ```
 
 
 
@@ -146,8 +146,8 @@ pal2 <- colorNumeric(
 Leaflet test - Stark
 ```{r}
 
-stark_leaflet <- leaflet(df_stark, options = leafletOptions(crs = leafletCRS(crsClass = "L.CRS.Simple"))) %>% 
-  addPolygons(fillColor = ~pal1(Stark), 
+test_leaflet <- leaflet(df_stark, options = leafletOptions(crs = leafletCRS(crsClass = "L.CRS.Simple"))) %>% 
+  addPolygons(fillColor = ~pal2(Stark), 
               stroke=TRUE, 
               fillOpacity = 0.9, 
               color="black", 
@@ -155,23 +155,31 @@ stark_leaflet <- leaflet(df_stark, options = leafletOptions(crs = leafletCRS(crs
               label = mytext, 
               labelOptions = labelOptions(style = list("font-weight" = "normal", padding = "3px 8px"), 
                                           textsize = "13px", direction = "auto")) %>% 
-  addLegend( pal=pal1, 
+  addLegend( pal=pal2, 
              values=~Stark, 
              opacity=1, 
              title = "Number of Battles per Region", 
              position = "bottomleft")
   
 
-stark_leaflet
+test_leaflet
 ```
 
+
+pal2 <- colorNumeric(
+ palette = "Blues",
+  domain = df_stark$Stark)
 
 Baratheon leaflet
 ```{r}
 mytext_bar=paste("Region: ", df_baratheon$name, "<br/>", "# of battles: ", df_baratheon$Baratheon)%>% 
   lapply(htmltools::HTML)
 mybins_bar = c(0,1,2,3)
-pal_bar = colorBin( palette="YlOrBr", domain = df_baratheon$Baratheon, na.color="gray", bins=mybins_bar)
+pal_bar = colorBin( palette="Blues", domain = df_baratheon$Baratheon, na.color="gray", bins=mybins_bar)
+
+#pal_bar <- colorNumeric(
+ #palette = "Blues",
+  #domain = df_baratheon$Baratheon)
 
 baratheon_leaflet <- leaflet(df_baratheon, options = leafletOptions(crs = leafletCRS(crsClass = "L.CRS.Simple"))) %>% 
   addPolygons(fillColor = ~pal_bar(Baratheon), 
@@ -200,7 +208,7 @@ mytext_BOLLL = paste("Region: ", df_bolton$name, "<br/>", "# of battles: ", df_b
 
 mybins_BOLLL = c(0,1,2,3)
 
-pal_BOLLL = colorBin( palette="YlOrBr", domain = df_bolton$Bolton, na.color="gray", bins=mybins_BOLLL)
+pal_BOLLL = colorBin( palette="Blues", domain = df_bolton$Bolton, na.color="gray", bins=mybins_BOLLL)
 
 
 bolton_leaflet <- leaflet(df_bolton, options = leafletOptions(crs = leafletCRS(crsClass = "L.CRS.Simple"))) %>% 
@@ -230,7 +238,7 @@ mytext_frey = paste("Region: ", df_frey$name, "<br/>", "# of battles: ", df_frey
 
 mybins_frey = c(0,1,2,3)
 
-pal_frey = colorBin( palette="YlOrBr", domain = df_frey$Frey, na.color="gray", bins=mybins_frey)
+pal_frey = colorBin( palette="Blues", domain = df_frey$Frey, na.color="gray", bins=mybins_frey)
 
 
 frey_leaflet <- leaflet(df_frey, options = leafletOptions(crs = leafletCRS(crsClass = "L.CRS.Simple"))) %>% 
@@ -261,7 +269,7 @@ mytext_glo = paste("Region: ", df_glover$name, "<br/>", "# of battles: ", df_glo
 
 mybins_glo = c(0,1,2)
 
-pal_glo = colorBin( palette="YlOrBr", domain = df_glover$Glover, na.color="gray", bins=mybins_glo)
+pal_glo = colorBin( palette="Blues", domain = df_glover$Glover, na.color="gray", bins=mybins_glo)
 
 
 glover_leaflet <- leaflet(df_glover, options = leafletOptions(crs = leafletCRS(crsClass = "L.CRS.Simple"))) %>% 
@@ -284,43 +292,219 @@ glover_leaflet
 ```
 
 
+
+
 Greyjoy leaflet
 ```{r}
-mytext_BOLLL = paste("Region: ", df_bolton$name, "<br/>", "# of battles: ", df_bolton$Bolton)%>% 
+mytext_grey = paste("Region: ", df_greyjoy$name, "<br/>", "# of battles: ", df_greyjoy$Greyjoy)%>% 
   lapply(htmltools::HTML)
 
-mybins_BOLLL = c(0,1,2,3)
+mybins_grey = c(0,1,2,3,4,5,6,7,8,9)
 
-pal_BOLLL = colorBin( palette="YlOrBr", domain = df_bolton$Bolton, na.color="gray", bins=mybins_BOLLL)
+pal_grey = colorBin( palette="Blues", domain = df_greyjoy$Greyjoy, na.color="gray", bins=mybins_grey)
 
 
-bolton_leaflet <- leaflet(df_bolton, options = leafletOptions(crs = leafletCRS(crsClass = "L.CRS.Simple"))) %>% 
-  addPolygons(fillColor = ~pal_BOLLL(Bolton), 
+greyjoy_leaflet <- leaflet(df_greyjoy, options = leafletOptions(crs = leafletCRS(crsClass = "L.CRS.Simple"))) %>% 
+  addPolygons(fillColor = ~pal_grey(Greyjoy), 
               stroke=TRUE, 
               fillOpacity = 0.9, 
               color="black", 
               weight=0.9,
-              label = mytext_BOLLL, 
+              label = mytext_grey, 
               labelOptions = labelOptions(style = list("font-weight" = "normal", padding = "3px 8px"), 
                                           textsize = "13px", direction = "auto")) %>% 
-  addLegend( pal=pal_BOLLL, 
-             values=~Bolton, 
+  addLegend( pal=pal_grey, 
+             values=~Greyjoy, 
              opacity=1, 
              title = "Number of Battles per Region", 
              position = "bottomleft")
   
 
-bolton_leaflet
+greyjoy_leaflet
 ```
 
 
 
+Karstark leaflet
+```{r}
+mytext_kar = paste("Region: ", df_karstark$name, "<br/>", "# of battles: ", df_karstark$Karstark)%>% 
+  lapply(htmltools::HTML)
+
+mybins_kar = c(0,1,2)
+
+pal_kar = colorBin( palette="Blues", domain = df_karstark$Karstark, na.color="gray", bins=mybins_kar)
+
+
+karstark_leaflet <- leaflet(df_karstark, options = leafletOptions(crs = leafletCRS(crsClass = "L.CRS.Simple"))) %>% 
+  addPolygons(fillColor = ~pal_kar(Karstark), 
+              stroke=TRUE, 
+              fillOpacity = 0.9, 
+              color="black", 
+              weight=0.9,
+              label = mytext_kar, 
+              labelOptions = labelOptions(style = list("font-weight" = "normal", padding = "3px 8px"), 
+                                          textsize = "13px", direction = "auto")) %>% 
+  addLegend( pal=pal_kar, 
+             values=~Karstark, 
+             opacity=1, 
+             title = "Number of Battles per Region", 
+             position = "bottomleft")
+  
+
+karstark_leaflet
+```
 
 
 
+Lannister leaflet
+```{r}
+mytext_lan = paste("Region: ", df_lannister$name, "<br/>", "# of battles: ", df_lannister$Lannister)%>% 
+  lapply(htmltools::HTML)
+
+mybins_lan = c(0,1,2,3,4,5,6,7,8,9,10,11,12,13)
+
+pal_lan = colorBin( palette="Blues", domain = df_lannister$Lannister, na.color="gray", bins=mybins_lan)
+
+
+lannister_leaflet <- leaflet(df_lannister, options = leafletOptions(crs = leafletCRS(crsClass = "L.CRS.Simple"))) %>% 
+  addPolygons(fillColor = ~pal_lan(Lannister), 
+              stroke=TRUE, 
+              fillOpacity = 0.9, 
+              color="black", 
+              weight=0.9,
+              label = mytext_lan, 
+              labelOptions = labelOptions(style = list("font-weight" = "normal", padding = "3px 8px"), 
+                                          textsize = "13px", direction = "auto")) %>% 
+  addLegend( pal=pal_lan, 
+             values=~Lannister, 
+             opacity=1, 
+             title = "Number of Battles per Region", 
+             position = "bottomleft")
+  
+
+lannister_leaflet
+```
 
 
 
+Mormont leaflet
+```{r}
+mytext_mor = paste("Region: ", df_mormont$name, "<br/>", "# of battles: ", df_mormont$Mormont)%>% 
+  lapply(htmltools::HTML)
+
+mybins_mor = c(0,1,2)
+
+pal_mor = colorBin( palette="Blues", domain = df_mormont$Mormont, na.color="gray", bins=mybins_mor)
+
+
+mormont_leaflet <- leaflet(df_mormont, options = leafletOptions(crs = leafletCRS(crsClass = "L.CRS.Simple"))) %>% 
+  addPolygons(fillColor = ~pal_mor(Mormont), 
+              stroke=TRUE, 
+              fillOpacity = 0.9, 
+              color="black", 
+              weight=0.9,
+              label = mytext_mor, 
+              labelOptions = labelOptions(style = list("font-weight" = "normal", padding = "3px 8px"), 
+                                          textsize = "13px", direction = "auto")) %>% 
+  addLegend( pal=pal_mor, 
+             values=~Mormont, 
+             opacity=1, 
+             title = "Number of Battles per Region", 
+             position = "bottomleft")
+  
+
+mormont_leaflet
+```
+
+
+Stark leaflet
+```{r}
+mytext_sta = paste("Region: ", df_stark$name, "<br/>", "# of battles: ", df_stark$Stark)%>% 
+  lapply(htmltools::HTML)
+
+mybins_sta = c(0,1,2,3,4,5,6,7)
+
+pal_sta = colorBin( palette="YlOrBr", domain = df_stark$Stark, na.color="gray", bins=mybins_sta)
+
+
+stark_leaflet <- leaflet(df_stark, options = leafletOptions(crs = leafletCRS(crsClass = "L.CRS.Simple"))) %>% 
+  addPolygons(fillColor = ~pal_sta(Stark), 
+              stroke=TRUE, 
+              fillOpacity = 0.9, 
+              color="black", 
+              weight=0.9,
+              label = mytext_sta, 
+              labelOptions = labelOptions(style = list("font-weight" = "normal", padding = "3px 8px"), 
+                                          textsize = "13px", direction = "auto")) %>% 
+  addLegend( pal=pal_sta, 
+             values=~Stark, 
+             opacity=1, 
+             title = "Number of Battles per Region", 
+             position = "bottomleft")
+  
+
+stark_leaflet
+```
+
+
+Tully leaflet
+```{r}
+mytext_tul = paste("Region: ", df_tully$name, "<br/>", "# of battles: ", df_tully$Tully)%>% 
+  lapply(htmltools::HTML)
+
+mybins_tul = c(0,1,2,3,4,5)
+
+pal_tul = colorBin( palette="YlOrBr", domain = df_tully$Tully, na.color="gray", bins=mybins_tul)
+
+
+tully_leaflet <- leaflet(df_tully, options = leafletOptions(crs = leafletCRS(crsClass = "L.CRS.Simple"))) %>% 
+  addPolygons(fillColor = ~pal_tul(Tully), 
+              stroke=TRUE, 
+              fillOpacity = 0.9, 
+              color="black", 
+              weight=0.9,
+              label = mytext_tul, 
+              labelOptions = labelOptions(style = list("font-weight" = "normal", padding = "3px 8px"), 
+                                          textsize = "13px", direction = "auto")) %>% 
+  addLegend( pal=pal_tul, 
+             values=~Tully, 
+             opacity=1, 
+             title = "Number of Battles per Region", 
+             position = "bottomleft")
+  
+
+tully_leaflet
+```
+
+
+Tyrell leaflet
+```{r}
+mytext_tyr = paste("Region: ", df_tyrell$name, "<br/>", "# of battles: ", df_tyrell$Tyrell)%>% 
+  lapply(htmltools::HTML)
+
+mybins_tyr = c(0,1,2)
+
+pal_tyr = colorBin( palette="YlOrBr", domain = df_tyrell$Tyrell, na.color="gray", bins=mybins_tyr)
+
+
+tyrell_leaflet <- leaflet(df_tyrell, options = leafletOptions(crs = leafletCRS(crsClass = "L.CRS.Simple"))) %>% 
+  addPolygons(fillColor = ~pal_tyr(Tyrell), 
+              stroke=TRUE, 
+              fillOpacity = 0.9, 
+              color="black", 
+              weight=0.9,
+              label = mytext_tyr, 
+              labelOptions = labelOptions(style = list("font-weight" = "normal", padding = "3px 8px"), 
+                                          textsize = "13px", direction = "auto")) %>% 
+  addLegend( pal=pal_tyr, 
+             values=~Tyrell, 
+             opacity=1, 
+             title = "Number of Battles per Region", 
+             position = "bottomleft")
+  
+
+tyrell_leaflet
+```
 
 
 
