@@ -21,13 +21,15 @@ Table of min/max army Size
 library(readr)
 library(tidyverse)
 library(readxl)
+library(knitr)
+
 
 
 house_stats_summary <- read_excel("house_stats.xlsx")
 
 #create data frame for % wins
 house_stats_summary <-house_stats_summary %>% 
-  mutate(percent_win = ((wins/total_battles)*100))
+  mutate(percent_win = ((wins/total_battles)*100)) 
 
 
 house_stats <- read_excel("house_stats.xlsx", 
@@ -69,13 +71,31 @@ ggplot(baratheon, aes(x=battle_type))+
 
 
 #baratheon table of army size
- 
+
+army_stats <- house_stats %>% 
+  select(house, army_size) %>% 
+  filter(house== "Baratheon")
 
 
+plot(army_stats)
+
+ ggplot(army_stats, aes(x= house, y=army_size)) +
+      geom_boxplot(fill = "slateblue") +
+      ylab("Army Size\n") +
+      xlab("")+
+      theme_classic() +
+      theme(legend.position = "", 
+            title = element_text(size=20, face = "bold"),
+            plot.title = element_text(hjust = 0.5),
+            axis.text.x = element_text(size = 15),
+            axis.text.y = element_text(size = 15)
+      )
 
 
 ```
 
 
+
+ # army size box plot
 
 

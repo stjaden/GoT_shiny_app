@@ -11,7 +11,6 @@ library(DT)
 house_stats <- read_excel("house_stats.xlsx", 
                           sheet = "Sheet1")
 
-house_stats_summary <- read_excel("house_stats.xlsx")
 
 house_stats$outcome <- as.factor(house_stats$outcome)
 house_stats$battle_type <- as.factor(house_stats$battle_type)
@@ -83,22 +82,22 @@ ui <- fluidPage(
                         ),
                         
                         
-                        
-                        # army size table
-                
-              
-                        
-                        
-
+                        # Regional battle experience
                         fluidRow(
                           column(4, wellPanel(p("Map 1"))),
                           column(4, wellPanel(p("Map 2"))),
                           column(4, wellPanel(p("Map 2")))
+                        ),
+                        
+                        # Army size boxplot
+                        fluidRow(
+                          column(12, plotOutput("army_boxplot"))
                         )
                         
                         
                         
                       )),
+                      
              
              #Pick Alliances Tab
              tabPanel("Pick Alliances",
@@ -158,10 +157,6 @@ ui <- fluidPage(
 
 ########################## Server
 server <- function(input, output) {
-  
-  
-
-
   
   
   #Create battle type histogram 1 on Explore tab based on house 1 selection
@@ -240,10 +235,29 @@ server <- function(input, output) {
   })
   
   
+# create army size boxplot
+ 
+  output$army_boxplot <- renderPlot({
+    
+    army_stats <- house_stats %>% 
+      select(house, army_size) %>% 
+      filter(house == input$house1_explore | house == input$house2_explore |house == input$house3_explore)
+    
+    ggplot(army_stats, aes(x= house, y=army_size)) +
+      geom_boxplot(fill = "slateblue") +
+      ylab("Army Size\n") +
+      xlab("")+
+      theme_classic() +
+      theme(legend.position = "", 
+            title = element_text(size=20, face = "bold"),
+            plot.title = element_text(hjust = 0.5),
+            axis.text.x = element_text(size = 15),
+            axis.text.y = element_text(size = 15)
+      )
+    
+  })
   
-  
-  
-  
+
   
 }
 
