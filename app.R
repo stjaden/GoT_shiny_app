@@ -5,10 +5,13 @@ library(shinydashboard)
 library(gridExtra)
 library(readr)
 library(readxl)
+library(DT)
 
 #make house_stats data frame
 house_stats <- read_excel("house_stats.xlsx", 
                           sheet = "Sheet1")
+
+house_stats_summary <- read_excel("house_stats.xlsx")
 
 house_stats$outcome <- as.factor(house_stats$outcome)
 house_stats$battle_type <- as.factor(house_stats$battle_type)
@@ -39,57 +42,60 @@ ui <- fluidPage(
              
              #Explore Alliances Tab
              tabPanel("Explore Alliances",
-                        
                       
-                        # PLACEHOLDER: Show a plot of the generated distribution
-                        mainPanel(
-                          #Fluid row controls the layout in the main panel 
+                      
+                      # PLACEHOLDER: Show a plot of the generated distribution
+                      mainPanel(
+                        
+                        # text describing what graphs/outputs are and what they mean
+                        fluidRow(
+                          column(width = 12,
+                                 "Describe results below")
+                        ), 
+                        
+                        
+                        
+                        # Column Headers
+                        fluidRow(
+                          column(4, selectInput("house1_explore", 
+                                                "Explore House 1 Battle Stats:",
+                                                choices = c(Stark="Stark",Lannister="Lannister",Baratheon="Baratheon",Tully="Tully",Greyjoy="Greyjoy",Frey="Frey",Bolton="Bolton",Karstark="Karstark",Mormont="Mormont",Glover="Glover",Tyrell="Tyrell")
+                          )),
                           
-                          fluidRow(
-                            column(width = 12,
-                                   "Describe results below")
-                          ), 
-                          
-                          # Column Headers
-                          fluidRow(
-                            column(4, selectInput("house1_explore", 
-                                               "Explore House 1 Battle Stats:",
-                                               choices = c(Stark="Stark",Lannister="Lannister",Baratheon="Baratheon",Tully="Tully",Greyjoy="Greyjoy",Frey="Frey",Bolton="Bolton",Karstark="Karstark",Mormont="Mormont",Glover="Glover",Tyrell="Tyrell")
-                                   )),
-                            
-                            column(4, selectInput("house2_explore",
-                                                      "Explore House 2 Battle Stats:",
-                                                      choices = c(Stark="Stark",Lannister="Lannister",Baratheon="Baratheon",Tully="Tully",Greyjoy="Greyjoy",Frey="Frey",Bolton="Bolton",Karstark="Karstark",Mormont="Mormont",Glover="Glover",Tyrell="Tyrell")
-                                          )),
-                            column(4, selectInput("house3_explore",
-                                                  "Explore House 3 Battle Stats:",
-                                                  choices = c(Stark="Stark",Lannister="Lannister",Baratheon="Baratheon",Tully="Tully",Greyjoy="Greyjoy",Frey="Frey",Bolton="Bolton",Karstark="Karstark",Mormont="Mormont",Glover="Glover",Tyrell="Tyrell")
-                            ))
-                            ),  
-                          
-                         
-                          # Battle type stats graphs
-                          fluidRow(
-                            column(4, plotOutput("battle_type_hist1")),
-                            column(4, plotOutput("battle_type_hist2")),
-                            column(4, plotOutput("battle_type_hist3"))
-                            ),
-                          
-                          
-                          # Army size tables
-                          fluidRow(
-                            column(4, wellPanel(p("Army Stats 1"))),
-                            column(4, wellPanel(p("Army Stats 2"))),
-                            column(4, wellPanel(p("Army Stats 2")))
+                          column(4, selectInput("house2_explore",
+                                                "Explore House 2 Battle Stats:",
+                                                choices = c(Stark="Stark",Lannister="Lannister",Baratheon="Baratheon",Tully="Tully",Greyjoy="Greyjoy",Frey="Frey",Bolton="Bolton",Karstark="Karstark",Mormont="Mormont",Glover="Glover",Tyrell="Tyrell")
+                          )),
+                          column(4, selectInput("house3_explore",
+                                                "Explore House 3 Battle Stats:",
+                                                choices = c(Stark="Stark",Lannister="Lannister",Baratheon="Baratheon",Tully="Tully",Greyjoy="Greyjoy",Frey="Frey",Bolton="Bolton",Karstark="Karstark",Mormont="Mormont",Glover="Glover",Tyrell="Tyrell")
+                          ))
+                        ),  
+                        
+                        
+                       
+                        
+                        # Battle type stats graphs
+                        fluidRow(
+                          column(4, plotOutput("battle_type_hist1")),
+                          column(4, plotOutput("battle_type_hist2")),
+                          column(4, plotOutput("battle_type_hist3"))
+                        ),
+                        
+                        
+                        
+                        # army size table
+                
+              
+                        
+                        
 
-                          ),
-                          
-                          fluidRow(
-                            column(4, wellPanel(p("Map 1"))),
-                            column(4, wellPanel(p("Map 2"))),
-                            column(4, wellPanel(p("Map 2")))
-                          )
-                            
+                        fluidRow(
+                          column(4, wellPanel(p("Map 1"))),
+                          column(4, wellPanel(p("Map 2"))),
+                          column(4, wellPanel(p("Map 2")))
+                        )
+                        
                         
                         
                       )),
@@ -153,12 +159,17 @@ ui <- fluidPage(
 ########################## Server
 server <- function(input, output) {
   
+  
+
+
+  
+  
   #Create battle type histogram 1 on Explore tab based on house 1 selection
   output$battle_type_hist1 <- renderPlot({
     
     battle_type_data <- house_stats %>%
       filter(house == input$house1_explore)
-  
+    
     
     ggplot(battle_type_data, aes(x=battle_type))+
       geom_bar(aes(fill= outcome), position = "stack") +
@@ -227,8 +238,8 @@ server <- function(input, output) {
       coord_flip()
     
   })
-
-
+  
+  
   
   
   
@@ -238,5 +249,4 @@ server <- function(input, output) {
 
 # Run the application 
 shinyApp(ui = ui, server = server)
-
 
