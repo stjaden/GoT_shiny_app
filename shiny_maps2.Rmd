@@ -1,0 +1,497 @@
+---
+title: "shiny_maps"
+author: "Alexander Stejskal"
+date: "February 28, 2019"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+
+```{r}
+library(tidyverse)
+library(sf)
+library(leaflet)
+library(tmap)
+library(plotly)
+library(leaflet)
+library(htmltools)
+#library(editData)
+#library(forcats)
+#library(dplyr)
+```
+
+
+```{r}
+#house_stats <- read_excel("~/GOT/GOT_R/shiny_maps/house_stats.xlsx")
+
+#battle_location <- read_excel("~/GOT/GOT_R/shiny_maps/battle_location.xlsx")
+
+#battle_location_map2 <- read_excel("~/GOT/GOT_R/shiny_maps/battle_location_map2.xlsx")
+
+```
+
+
+
+```{r}
+got_region <- st_read(dsn = ".", layer = "Political")
+```
+
+
+
+```{r}
+got_region$name <- as.character(got_region$name)
+
+got_region$name <- ifelse(is.na(got_region2$name),
+                           'Beyond the Wall', got_region$name)
+
+got_region %>% 
+  replace_na(list(name = "Beyond the Wall"))
+```
+
+
+
+```{r}
+region <- got_region %>% 
+  dplyr::select(name)
+
+plot(region)
+```
+
+
+```{r}
+region_df <- full_join(got_region, battle_location_map2)
+```
+
+
+House dataframes
+```{r}
+df_baratheon <- region_df %>% 
+  dplyr::select(name, Baratheon) %>% 
+  replace_na(list(name = "Beyond the Wall", Baratheon = "0"))
+df_baratheon$Baratheon <- as.numeric(as.character(df_baratheon$Baratheon))
+
+df_bolton <- region_df %>% 
+  dplyr::select(name, Bolton) %>% 
+    replace_na(list(name = "Beyond the Wall", Bolton = "0"))
+df_bolton$Bolton <- as.numeric(as.character(df_bolton$Bolton))
+
+df_frey <- region_df %>% 
+  dplyr::select(name, Frey) %>% 
+    replace_na(list(name = "Beyond the Wall", Frey = "0"))
+df_frey$Frey <- as.numeric(as.character(df_frey$Frey))
+
+df_glover <- region_df %>% 
+  dplyr::select(name, Glover) %>% 
+    replace_na(list(name = "Beyond the Wall", Glover = "0"))
+df_glover$Glover <- as.numeric(as.character(df_glover$Glover))
+
+df_greyjoy <- region_df %>% 
+  dplyr::select(name, Greyjoy) %>% 
+    replace_na(list(name = "Beyond the Wall", Greyjoy = "0"))
+df_greyjoy$Greyjoy<- as.numeric(as.character(df_greyjoy$Greyjoy))
+
+df_karstark <- region_df %>% 
+  dplyr::select(name, Karstark) %>% 
+    replace_na(list(name = "Beyond the Wall", Karstark = "0"))
+df_karstark$Karstark <- as.numeric(as.character(df_karstark$Karstark))
+
+df_lannister <- region_df %>% 
+  dplyr::select(name, Lannister) %>% 
+    replace_na(list(name = "Beyond the Wall", Lannister = "0"))
+df_lannister$Lannister <- as.numeric(as.character(df_lannister$Lannister))
+
+df_mormont <- region_df %>% 
+  dplyr::select(name, Mormont) %>% 
+    replace_na(list(name = "Beyond the Wall", Mormont = "0"))
+df_mormont$Mormont <- as.numeric(as.character(df_mormont$Mormont))
+
+df_stark <- region_df %>% 
+  dplyr::select(name, Stark) %>% 
+    replace_na(list(name = "Beyond the Wall", Stark = "0"))
+df_stark$Stark <- as.numeric(as.character(df_stark$Stark))
+
+df_tully <- region_df %>% 
+  dplyr::select(name, Tully) %>% 
+    replace_na(list(name = "Beyond the Wall", Tully = "0"))
+df_tully$Tully <- as.numeric(as.character(df_tully$Tully))
+
+df_tyrell <- region_df %>% 
+  dplyr::select(name, Tyrell) %>% 
+    replace_na(list(name = "Beyond the Wall", Tyrell = "0"))
+df_tyrell$Tyrell <- as.numeric(as.character(df_tyrell$Tyrell))
+```
+
+
+
+```{r}
+
+mytext=paste("Region: ", df_stark$name, "<br/>", "# of battles: ", df_stark$Stark)%>% 
+  lapply(htmltools::HTML)
+
+mybins = c(0,1,2,3,4,5,6,7)
+pal1 = colorBin( palette="YlOrBr", domain = df_stark$Stark, na.color="gray", bins=mybins)
+
+pal2 <- colorNumeric(
+ palette = "Blues",
+  domain = df_stark$Stark)
+
+
+
+```
+
+
+Leaflet test - Stark
+```{r}
+
+stark_leaflet <- leaflet(df_stark, options = leafletOptions(crs = leafletCRS(crsClass = "L.CRS.Simple"))) %>% 
+  addPolygons(fillColor = ~pal1(Stark), 
+              stroke=TRUE, 
+              fillOpacity = 0.9, 
+              color="black", 
+              weight=0.9,
+              label = mytext, 
+              labelOptions = labelOptions(style = list("font-weight" = "normal", padding = "3px 8px"), 
+                                          textsize = "13px", direction = "auto")) %>% 
+  addLegend( pal=pal1, 
+             values=~Stark, 
+             opacity=1, 
+             title = "Number of Battles per Region", 
+             position = "bottomleft")
+  
+
+stark_leaflet
+```
+
+
+Baratheon leaflet
+```{r}
+mytext_bar=paste("Region: ", df_baratheon$name, "<br/>", "# of battles: ", df_baratheon$Baratheon)%>% 
+  lapply(htmltools::HTML)
+mybins_bar = c(0,1,2,3)
+pal_bar = colorBin( palette="YlOrBr", domain = df_baratheon$Baratheon, na.color="gray", bins=mybins_bar)
+
+baratheon_leaflet <- leaflet(df_baratheon, options = leafletOptions(crs = leafletCRS(crsClass = "L.CRS.Simple"))) %>% 
+  addPolygons(fillColor = ~pal_bar(Baratheon), 
+              stroke=TRUE, 
+              fillOpacity = 0.9, 
+              color="black", 
+              weight=0.9,
+              label = mytext_bar, 
+              labelOptions = labelOptions(style = list("font-weight" = "normal", padding = "3px 8px"), 
+                                          textsize = "13px", direction = "auto")) %>% 
+  addLegend( pal=pal_bar, 
+             values=~Baratheon, 
+             opacity=1, 
+             title = "Number of Battles per Region", 
+             position = "bottomleft")
+  
+
+baratheon_leaflet
+```
+
+
+Bolton leaflet
+```{r}
+mytext_BOLLL = paste("Region: ", df_bolton$name, "<br/>", "# of battles: ", df_bolton$Bolton)%>% 
+  lapply(htmltools::HTML)
+
+mybins_BOLLL = c(0,1,2,3)
+
+pal_BOLLL = colorBin( palette="YlOrBr", domain = df_bolton$Bolton, na.color="gray", bins=mybins_BOLLL)
+
+
+bolton_leaflet <- leaflet(df_bolton, options = leafletOptions(crs = leafletCRS(crsClass = "L.CRS.Simple"))) %>% 
+  addPolygons(fillColor = ~pal_BOLLL(Bolton), 
+              stroke=TRUE, 
+              fillOpacity = 0.9, 
+              color="black", 
+              weight=0.9,
+              label = mytext_BOLLL, 
+              labelOptions = labelOptions(style = list("font-weight" = "normal", padding = "3px 8px"), 
+                                          textsize = "13px", direction = "auto")) %>% 
+  addLegend( pal=pal_BOLLL, 
+             values=~Bolton, 
+             opacity=1, 
+             title = "Number of Battles per Region", 
+             position = "bottomleft")
+  
+
+bolton_leaflet
+```
+
+
+Frey leaflet
+```{r}
+mytext_frey = paste("Region: ", df_frey$name, "<br/>", "# of battles: ", df_frey$Frey)%>% 
+  lapply(htmltools::HTML)
+
+mybins_frey = c(0,1,2,3)
+
+pal_frey = colorBin( palette="YlOrBr", domain = df_frey$Frey, na.color="gray", bins=mybins_frey)
+
+
+frey_leaflet <- leaflet(df_frey, options = leafletOptions(crs = leafletCRS(crsClass = "L.CRS.Simple"))) %>% 
+  addPolygons(fillColor = ~pal_frey(Frey), 
+              stroke=TRUE, 
+              fillOpacity = 0.9, 
+              color="black", 
+              weight=0.9,
+              label = mytext_frey, 
+              labelOptions = labelOptions(style = list("font-weight" = "normal", padding = "3px 8px"), 
+                                          textsize = "13px", direction = "auto")) %>% 
+  addLegend( pal=pal_frey, 
+             values=~Frey, 
+             opacity=1, 
+             title = "Number of Battles per Region", 
+             position = "bottomleft")
+  
+
+frey_leaflet
+```
+
+
+
+Glover leaflet
+```{r}
+mytext_glo = paste("Region: ", df_glover$name, "<br/>", "# of battles: ", df_glover$Glover)%>% 
+  lapply(htmltools::HTML)
+
+mybins_glo = c(0,1,2)
+
+pal_glo = colorBin( palette="YlOrBr", domain = df_glover$Glover, na.color="gray", bins=mybins_glo)
+
+
+glover_leaflet <- leaflet(df_glover, options = leafletOptions(crs = leafletCRS(crsClass = "L.CRS.Simple"))) %>% 
+  addPolygons(fillColor = ~pal_glo(Glover), 
+              stroke=TRUE, 
+              fillOpacity = 0.9, 
+              color="black", 
+              weight=0.9,
+              label = mytext_glo, 
+              labelOptions = labelOptions(style = list("font-weight" = "normal", padding = "3px 8px"), 
+                                          textsize = "13px", direction = "auto")) %>% 
+  addLegend( pal=pal_glo, 
+             values=~Glover, 
+             opacity=1, 
+             title = "Number of Battles per Region", 
+             position = "bottomleft")
+  
+
+glover_leaflet
+```
+
+
+Greyjoy leaflet
+```{r}
+mytext_BOLLL = paste("Region: ", df_bolton$name, "<br/>", "# of battles: ", df_bolton$Bolton)%>% 
+  lapply(htmltools::HTML)
+
+mybins_BOLLL = c(0,1,2,3)
+
+pal_BOLLL = colorBin( palette="YlOrBr", domain = df_bolton$Bolton, na.color="gray", bins=mybins_BOLLL)
+
+
+bolton_leaflet <- leaflet(df_bolton, options = leafletOptions(crs = leafletCRS(crsClass = "L.CRS.Simple"))) %>% 
+  addPolygons(fillColor = ~pal_BOLLL(Bolton), 
+              stroke=TRUE, 
+              fillOpacity = 0.9, 
+              color="black", 
+              weight=0.9,
+              label = mytext_BOLLL, 
+              labelOptions = labelOptions(style = list("font-weight" = "normal", padding = "3px 8px"), 
+                                          textsize = "13px", direction = "auto")) %>% 
+  addLegend( pal=pal_BOLLL, 
+             values=~Bolton, 
+             opacity=1, 
+             title = "Number of Battles per Region", 
+             position = "bottomleft")
+  
+
+bolton_leaflet
+```
+
+
+
+
+
+
+
+
+
+
+
+
+leaf <- leaflet() %>% addTiles() %>% addLegend(
+  position = 'bottomright',
+  colors = rgb(t(col2rgb(palette())) / 255),
+  labels = palette(), opacity = 1,
+  title = 'An Obvious Legend'
+)
+
+# see what it looks like with no customization
+leaf
+
+# you specify a custom style like this
+#   but the legend rectanges are .legend i
+#   instead of .legend .circle
+library(htmltools)
+
+
+# Final Map
+leaflet(world_spdf) %>% 
+  addTiles()  %>% 
+  setView( lat=10, lng=0 , zoom=2) %>%
+  addPolygons( 
+    fillColor = ~mypalette(POP2005), stroke=TRUE, fillOpacity = 0.9, color="white", weight=0.3,
+    highlight = highlightOptions( weight = 5, color = ~colorNumeric("Blues", POP2005)(POP2005), dashArray = "", fillOpacity = 0.3, bringToFront = TRUE),
+    label = mytext,
+    labelOptions = labelOptions( style = list("font-weight" = "normal", padding = "3px 8px"), textsize = "13px", direction = "auto")
+  ) %>%
+  addLegend( pal=mypalette, values=~POP2005, opacity=0.9, title = "Population (M)", position = "bottomleft" )
+
+
+
+# Create a color palette with handmade bins.
+mybins=c(0,10,20,50,100,500,Inf)
+mypalette = colorBin( palette="YlOrBr", domain=world_spdf@data$POP2005, na.color="transparent", bins=mybins)
+
+# Prepar the text for the tooltip:
+mytext=paste("Country: ", world_spdf@data$NAME,"<br/>", "Area: ", world_spdf@data$AREA, "<br/>", "Population: ", round(world_spdf@data$POP2005, 2), sep="") %>%
+  lapply(htmltools::HTML)
+
+
+
+
+Baratheon map
+```{r}
+baratheon_map <- ggplot(df_baratheon) +
+  geom_sf(aes(fill = Baratheon), color = "white", size = 0.2) +
+  #scale_fill_gradient(colors = c("blue","mediumorchid1","orange")) +
+  theme_minimal()
+
+baratheon_map
+
+```
+
+
+Bolton map
+```{r}
+bolton_map <- ggplot(df_bolton) +
+  geom_sf(aes(fill = Bolton), color = "white", size = 0.2) +
+  #scale_fill_gradient(colors = c("blue","mediumorchid1","orange")) +
+  theme_minimal()
+
+bolton_map
+```
+
+
+Frey map
+```{r}
+frey_map <- ggplot(df_frey) +
+  geom_sf(aes(fill = Frey), color = "white", size = 0.2) +
+  #scale_fill_gradient(colors = c("blue","mediumorchid1","orange")) +
+  theme_minimal()
+
+frey_map
+```
+
+
+Glover map
+```{r}
+glover_map <- ggplot(df_glover) +
+  geom_sf(aes(fill = Glover), color = "white", size = 0.2)+
+  theme_minimal()
+
+glover_map
+```
+
+
+Greyjoy map
+```{r}
+greyjoy_map <- ggplot(df_greyjoy) +
+  geom_sf(aes(fill = Greyjoy), color = "white", size = 0.2) +
+  theme_minimal()
+
+greyjoy_map
+```
+
+
+Karstark map
+```{r}
+karstark_map <-ggplot(df_karstark) +
+  geom_sf(aes(fill = Karstark), color = "white", size = 0.2) +
+  theme_minimal()
+
+karstark_map
+```
+
+
+Lannister map
+```{r}
+lannister_map <- ggplot(df_lannister) +
+  geom_sf(aes(fill = Lannister), color = "white", size = 0.2) +
+  theme_minimal()
+
+lannister_map
+```
+
+
+Mormont map
+```{r}
+mormont_map <- ggplot(df_mormont) +
+  geom_sf(aes(fill = Mormont), color = "white", size = 0.2) +
+  theme_minimal()
+
+mormont_map
+```
+
+
+Stark map
+```{r}
+stark_map <- ggplot(df_stark) +
+  geom_sf(aes(fill = Stark), color = "white", size = 0.2) +
+  theme_minimal()
+
+stark_map
+```
+
+
+Tully map
+```{r}
+tully_map <- ggplot(df_tully) +
+  geom_sf(aes(fill = Tully), color = "white", size = 0.2) +
+  theme_minimal()
+
+tully_map
+```
+
+
+Tyrell map
+```{r}
+tyrell_map <- ggplot(df_tyrell) +
+  geom_sf(aes(fill = Tyrell), color = "white", size = 0.2) +
+  theme_minimal()
+
+tyrell_map
+```
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
