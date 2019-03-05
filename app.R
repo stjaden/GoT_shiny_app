@@ -51,7 +51,7 @@ ui <- fluidPage(
                         # text describing what graphs/outputs are and what they mean
                         fluidRow(
                           column(width = 12,
-                                 "Describe results below")
+                                 "Battle statistics and experience are shown for each house selected for exploration")
                         ), 
                         
                         
@@ -59,22 +59,22 @@ ui <- fluidPage(
                         # Column Headers
                         fluidRow(
                           column(4, selectInput("house1_explore", 
-                                                "Explore House 1 Battle Stats:",
+                                                "House 1 Battle Stats:",
                                                 choices = c(Stark="Stark",Lannister="Lannister",Baratheon="Baratheon",Tully="Tully",Greyjoy="Greyjoy",Frey="Frey",Bolton="Bolton",Karstark="Karstark",Mormont="Mormont",Glover="Glover",Tyrell="Tyrell")
                           )),
                           
                           column(4, selectInput("house2_explore",
-                                                "Explore House 2 Battle Stats:",
+                                                "House 2 Battle Stats:",
                                                 choices = c(Stark="Stark",Lannister="Lannister",Baratheon="Baratheon",Tully="Tully",Greyjoy="Greyjoy",Frey="Frey",Bolton="Bolton",Karstark="Karstark",Mormont="Mormont",Glover="Glover",Tyrell="Tyrell")
                           )),
                           column(4, selectInput("house3_explore",
-                                                "Explore House 3 Battle Stats:",
+                                                "House 3 Battle Stats:",
                                                 choices = c(Stark="Stark",Lannister="Lannister",Baratheon="Baratheon",Tully="Tully",Greyjoy="Greyjoy",Frey="Frey",Bolton="Bolton",Karstark="Karstark",Mormont="Mormont",Glover="Glover",Tyrell="Tyrell")
                           ))
                         ),  
                         
                         
-                       
+                        
                         
                         # Battle type stats graphs
                         fluidRow(
@@ -94,13 +94,15 @@ ui <- fluidPage(
                         
                         # Army size boxplot
                         fluidRow(
-                          column(12, plotOutput("army_boxplot"))
+                          column(4, plotOutput("army_boxplot1")),
+                          column(4, plotOutput("army_boxplot2")),
+                          column(4, plotOutput("army_boxplot3"))
                         )
                         
                         
                         
                       )),
-                      
+             
              
              #Pick Alliances Tab
              tabPanel("Pick Alliances",
@@ -134,9 +136,30 @@ ui <- fluidPage(
                         
                         # pLACEHOLDER: Show a plot of the generated distribution
                         mainPanel(
-                          plotOutput("scatter")
+                          
+                          # text describing what graphs/outputs are and what they mean
+                          fluidRow(
+                            column(width = 12,
+                                   "Below are the combined battle statistics and experience for your choosen alliance")),
+                          
+                          fluidRow(plotOutput("battle_type_alliance")),
+                          fluidRow(plotOutput("alliance_army_boxplot"))
+                          
+                         
+                          
+                          
+                          
+                          
+                          
                         )
                       )),
+             
+             
+             
+             
+             
+             
+             
              #Battle Results
              tabPanel("Battle Results",
                       
@@ -161,7 +184,8 @@ ui <- fluidPage(
 ########################## Server
 server <- function(input, output) {
   
-  
+### EXPLORE FIGURES ###
+
   #Create battle type histogram 1 on Explore tab based on house 1 selection
   output$battle_type_hist1 <- renderPlot({
     
@@ -180,8 +204,8 @@ server <- function(input, output) {
       ) +
       scale_fill_manual(values = c("red", "darkgreen")) +
       scale_y_continuous(expand = c(0, 0), limits = c(0, 6), breaks = c(0,1,2,3,4,5)) +
-      ylab("")  +
-      xlab("") +
+      xlab("")+
+      ylab("# of battles")+
       ggtitle(input$house1_explore)+
       coord_flip()
     
@@ -205,8 +229,8 @@ server <- function(input, output) {
       ) +
       scale_fill_manual(values = c("red", "darkgreen")) +
       scale_y_continuous(expand = c(0, 0), limits = c(0, 6), breaks = c(0,1,2,3,4,5)) +
-      ylab("")  +
-      xlab("") +
+      xlab("")+
+      ylab("# of battles")+
       ggtitle(input$house2_explore)+
       coord_flip()
     
@@ -230,55 +254,130 @@ server <- function(input, output) {
       ) +
       scale_fill_manual(values = c("red", "darkgreen")) +
       scale_y_continuous(expand = c(0, 0), limits = c(0, 6), breaks = c(0,1,2,3,4,5)) +
-      ylab("")  +
-      xlab("") +
+      xlab("")+
+      ylab("# of battles")+
       ggtitle(input$house3_explore)+
       coord_flip()
     
   })
   
-  #create a map of regional experience based on house input
-
+#create a map of regional experience based on house input
   
-
-
-    
-    
-    
-    
-    
-  })
-  
-  
-  
-  
-  
-  # create army size boxplot
- 
-  output$army_boxplot <- renderPlot({
-    
-    army_stats <- house_stats %>% 
-      select(house, army_size) %>% 
-      filter(house == input$house1_explore | house == input$house2_explore |house == input$house3_explore)
-    
-    ggplot(army_stats, aes(x= house, y=army_size)) +
-      geom_boxplot(fill = "slateblue") +
-      ylab("Army Size\n") +
-      xlab("")+
-      theme_classic() +
-      theme(legend.position = "", 
-            title = element_text(size=20, face = "bold"),
-            plot.title = element_text(hjust = 0.5),
-            axis.text.x = element_text(size = 15),
-            axis.text.y = element_text(size = 15)
-      )
-    
-  })
   
 
+# create army size boxplot
+
+output$army_boxplot1 <- renderPlot({
   
+  army_stats <- house_stats %>% 
+    select(house, army_size) %>% 
+    filter(house == input$house1_explore)
+  
+  ggplot(army_stats, aes(x= house, y=army_size)) +
+    geom_boxplot(fill = "slateblue") +
+    ylab("Army Size\n") +
+    xlab("")+
+    theme_classic() +
+    theme(legend.position = "", 
+          title = element_text(size=20, face = "bold"),
+          plot.title = element_text(hjust = 0.5),
+          axis.text.x = element_text(size = 15),
+          axis.text.y = element_text(size = 15))
+  
+})
+
+output$army_boxplot2 <- renderPlot({
+  
+  army_stats <- house_stats %>% 
+    select(house, army_size) %>% 
+    filter(house == input$house2_explore)
+  
+  ggplot(army_stats, aes(x= house, y=army_size)) +
+    geom_boxplot(fill = "slateblue") +
+    ylab("Army Size\n") +
+    xlab("")+
+    theme_classic() +
+    theme(legend.position = "", 
+          title = element_text(size=20, face = "bold"),
+          plot.title = element_text(hjust = 0.5),
+          axis.text.x = element_text(size = 15),
+          axis.text.y = element_text(size = 15))
+  
+})
+
+
+output$army_boxplot3 <- renderPlot({
+  
+  army_stats <- house_stats %>% 
+    select(house, army_size) %>% 
+    filter(house == input$house3_explore)
+  
+  ggplot(army_stats, aes(x= house, y=army_size)) +
+    geom_boxplot(fill = "slateblue") +
+    ylab("Army Size\n") +
+    xlab("")+
+    theme_classic() +
+    theme(legend.position = "", 
+          title = element_text(size=20, face = "bold"),
+          plot.title = element_text(hjust = 0.5),
+          axis.text.x = element_text(size = 15),
+          axis.text.y = element_text(size = 15))
+  
+})
+
+
+
+
+
+### ALLIANCE FIGURES ###
+
+#Create battle type plot on Alliance tab based on alliances selection
+output$battle_type_alliance <- renderPlot({
+  
+  battle_type_data <- house_stats %>%
+    filter(house == input$house1_pick | house == input$house2_pick | house == input$house3_pick)
+  
+  
+  ggplot(battle_type_data, aes(x=battle_type))+
+    geom_bar(aes(fill= outcome), position = "stack") +
+    theme_classic() +
+    theme(legend.position = "", 
+          title = element_text(size=20, face = "bold"),
+          plot.title = element_text(hjust = 0.5),
+          axis.text.x = element_text(size = 15),
+          axis.text.y = element_text(size = 15)
+    ) +
+    scale_fill_manual(values = c("red", "darkgreen")) +
+    scale_y_continuous(expand = c(0, 0), breaks = c(0,2,4,6,8,10,12,14,16,18,20,22,24,26)) +
+    xlab("")+
+    ylab("# of battles")+
+    ggtitle("Your Alliance's Battle Experience")+
+    coord_flip()
+  
+})
+
+# create army size histogram for combined alliance
+output$alliance_army_boxplot <- renderPlot({
+  
+  army_stats <- house_stats %>% 
+    select(house, army_size) %>% 
+    filter(house == input$house1_pick | house == input$house2_pick |house == input$house3_pick)
+  
+  ggplot(army_stats, aes(x= house, y=army_size)) +
+    geom_boxplot(fill = "slateblue") +
+    ylab("Army Size\n") +
+    xlab("")+
+    theme_classic() +
+    theme(legend.position = "", 
+          title = element_text(size=20, face = "bold"),
+          plot.title = element_text(hjust = 0.5),
+          axis.text.x = element_text(size = 15),
+          axis.text.y = element_text(size = 15))
+  
+})
+
+
 }
 
 # Run the application 
 shinyApp(ui = ui, server = server)
-
