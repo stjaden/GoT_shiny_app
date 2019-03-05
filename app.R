@@ -1,12 +1,15 @@
 library(shiny)
 library(tidyverse)
 library(shinythemes)
-library(shinydashboard)
 library(gridExtra)
 library(readr)
 library(readxl)
-library(DT)
 library(leaflet)
+library(sf)
+library(tmap)
+library(plotly)
+library(htmltools)
+
 
 #make house_stats data frame
 house_stats <- read_excel("house_stats.xlsx", 
@@ -110,11 +113,7 @@ ui <- fluidPage(
                       # Sidebar: Sidebar with a slider for army sizes and radio buttons for picking alliance 
                       sidebarLayout(
                         sidebarPanel(
-                          sliderInput("ww_army_size",
-                                      "White Walker Army Size",
-                                      min = 1,
-                                      max = 150000,
-                                      value = 100000),
+                          
                           sliderInput("living_army_size",
                                       "Alliance Army Size",
                                       min = 1,
@@ -262,6 +261,61 @@ server <- function(input, output) {
   })
   
 #create a map of regional experience based on house input
+  #load in data for maps and join 
+  battle_location_map3 <- read_excel("battle_location_map3.xlsx")
+  got_region <- st_read(dsn = ".", layer = "Political")
+  
+  region_df <- full_join(got_region, battle_location_map3)
+  
+  # wrangling
+  df_region <- region_df %>% 
+    replace_na(list(name = "Beyond the Wall", Baratheon = "0", Bolton = "0", Frey = "0", Glover = "0", Greyjoy = "0", Karstark = "0", Lannister = "0", Mormont = "0", Stark = "0", Tully = "0", Tyrell = "0"))
+  
+  df_region$Baratheon = as.numeric(df_region$Baratheon)
+  df_region$Bolton = as.numeric(df_region$Bolton)
+  df_region$Frey = as.numeric(df_region$Frey)
+  df_region$Glover = as.numeric(df_region$Glover)
+  df_region$Greyjoy = as.numeric(df_region$Greyjoy)
+  df_region$Karstark = as.numeric(df_region$Karstark)
+  df_region$Lannister = as.numeric(df_region$Lannister)
+  df_region$Mormont = as.numeric(df_region$Mormont)
+  df_region$Stark = as.numeric(df_region$Stark)
+  df_region$Tully = as.numeric(df_region$Tully)
+  df_region$Tyrell = as.numeric(df_region$Tyrell)
+  
+  
+  # Make the map
+  
+  output$map_1 <- renderLeaflet({
+  
+  mytext_bar=paste("Region: ", df_region$name, "<br/>", "# of battles: ", df_region$input$house1_explore)%>% 
+    lapply(htmltools::HTML)
+  
+  
+  pal_bar <- colorNumeric(
+    palette = "Blues",
+    domain = df_region$input$house1_explore)
+  
+  
+ leaflet(df_region, options = leafletOptions(crs = leafletCRS(crsClass = "L.CRS.Simple"))) %>% 
+    addPolygons(fillColor = ~pal_bar(input$house1_explore), 
+                stroke=TRUE, 
+                fillOpacity = 0.9, 
+                color="black", 
+                weight=0.9,
+                label = mytext_bar, 
+                labelOptions = labelOptions(style = list("font-weight" = "normal", padding = "3px 8px"), 
+                                            textsize = "13px", direction = "auto")) %>% 
+    addLegend( pal=pal_bar, 
+               values=~Baratheon, 
+               opacity=1, 
+               title = "Number of Battles per Region", 
+               position = "bottomleft",
+               bins = 3)
+  
+  
+  })
+  
   
   
 
