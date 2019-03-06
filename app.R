@@ -114,11 +114,6 @@ ui <- fluidPage(
                       sidebarLayout(
                         sidebarPanel(
                           
-                          sliderInput("living_army_size",
-                                      "Alliance Army Size",
-                                      min = 1,
-                                      max = 150000,
-                                      value = 50000),
                           selectInput("house1_pick", 
                                       "Select House 1 for Alliance:",
                                       choices = c("Stark","Lannister","Baratheon","Tully","Greyjoy","Frey","Bolton","Karstark","Mormont","Glover","Tyrell")
@@ -131,7 +126,8 @@ ui <- fluidPage(
                                       "Select House 3 for Alliance",
                                       choices = c("Stark","Lannister","Baratheon","Tully","Greyjoy","Frey","Bolton","Karstark","Mormont","Glover","Tyrell")
                           )
-                        ),
+                          
+                        ), #close sidebar panel
                         
                         # pLACEHOLDER: Show a plot of the generated distribution
                         mainPanel(
@@ -144,31 +140,57 @@ ui <- fluidPage(
                           fluidRow(plotOutput("battle_type_alliance")),
                           fluidRow(plotOutput("alliance_army_boxplot"))
                           
-                         
-                          
-                          
-                          
-                          
-                          
-                        )
-                      )),
+
+                        ) #close main panel
+                      ) #close sidebar layout
+                    ), #close pick alliance tab
              
-             
-             
-             
-             
-             
-             
+        
              #Battle Results
              tabPanel("Battle Results",
+                    sidebarLayout(
+                        sidebarPanel(
+                          
+                          #input army size
+                          sliderInput("living_army_size",
+                                      "Alliance Army Size",
+                                      min = 1,
+                                      max = 150000,
+                                      value = 50000),
+                          
+                          #input region
+                          selectInput("region", 
+                                      "Select the region to fight WW",
+                                      choices = c("The Crownlands","The North","The Reach", "The Riverlands", "The Stormlands", "The Westerlands")
+                          ),
+                          
+                          #input battle types
+                          selectInput("battle_type", 
+                                      "Select battle types",
+                                      choices = c("ambush", "pitched battle", "razing", "siege")
+                          ),
+                          
+                          
+                          #select dragon preferences
+                          selectInput("dragons", 
+                                      "do you want dragons?",
+                                      choices = c("Yes", "No"))
+                          
+                        ), #close sidebar panel
                       
-                      # PLACEHOLDER: Show a plot of the generated distribution
+                         # PLACEHOLDER: Show a plot of the generated distribution
                       mainPanel(
-                        plotOutput("battle_type_hist")
-                      )
-             ))
+                        fluidRow(plotOutput("survival_probability"))
+                      
+                            ) #close main panel
+                        ) #close sidebar layout
+                    ) #close pick alliance tab
+
+             
+             
+      ) #close navbar page
   
-  )
+  ) #close whole thin
 
 
 
@@ -183,8 +205,8 @@ ui <- fluidPage(
 ########################## Server
 server <- function(input, output) {
   
-### EXPLORE FIGURES ###
-
+  ### EXPLORE FIGURES ###
+  
   #Create battle type histogram 1 on Explore tab based on house 1 selection
   output$battle_type_hist1 <- renderPlot({
     
@@ -260,178 +282,167 @@ server <- function(input, output) {
     
   })
   
-#create a map of regional experience based on house input
-  #load in data for maps and join 
-  battle_location_map3 <- read_excel("battle_location_map3.xlsx")
-  got_region <- st_read(dsn = ".", layer = "Political")
+  #create a map of regional experience based on house input
+
+
   
-  region_df <- full_join(got_region, battle_location_map3)
+  # create army size boxplot
   
-  # wrangling
-  df_region <- region_df %>% 
-    replace_na(list(name = "Beyond the Wall", Baratheon = "0", Bolton = "0", Frey = "0", Glover = "0", Greyjoy = "0", Karstark = "0", Lannister = "0", Mormont = "0", Stark = "0", Tully = "0", Tyrell = "0"))
+  output$army_boxplot1 <- renderPlot({
+    
+    army_stats <- house_stats %>% 
+      select(house, army_size) %>% 
+      filter(house == input$house1_explore)
+    
+    ggplot(army_stats, aes(x= house, y=army_size)) +
+      geom_boxplot(fill = "slateblue") +
+      ylab("Army Size\n") +
+      xlab("")+
+      theme_classic() +
+      theme(legend.position = "", 
+            title = element_text(size=20, face = "bold"),
+            plot.title = element_text(hjust = 0.5),
+            axis.text.x = element_text(size = 15),
+            axis.text.y = element_text(size = 15))
+    
+  })
   
-  df_region$Baratheon = as.numeric(df_region$Baratheon)
-  df_region$Bolton = as.numeric(df_region$Bolton)
-  df_region$Frey = as.numeric(df_region$Frey)
-  df_region$Glover = as.numeric(df_region$Glover)
-  df_region$Greyjoy = as.numeric(df_region$Greyjoy)
-  df_region$Karstark = as.numeric(df_region$Karstark)
-  df_region$Lannister = as.numeric(df_region$Lannister)
-  df_region$Mormont = as.numeric(df_region$Mormont)
-  df_region$Stark = as.numeric(df_region$Stark)
-  df_region$Tully = as.numeric(df_region$Tully)
-  df_region$Tyrell = as.numeric(df_region$Tyrell)
-  
-  
-  # Make the map
-  
-  output$map_1 <- renderLeaflet({
-  
-  mytext=paste("Region: ", df_region$name, "<br/>", "# of battles: ", df_region$input$house1_explore)%>% 
-    lapply(htmltools::HTML)
-  
-  
-  palette <- colorNumeric(
-    palette = "Blues",
-    domain = df_region$input$house1_explore)
-  
-  
- leaflet(df_region, options = leafletOptions(crs = leafletCRS(crsClass = "L.CRS.Simple"))) %>% 
-    addPolygons(fillColor = ~palette(input$house1_explore), 
-                stroke=TRUE, 
-                fillOpacity = 0.9, 
-                color="black", 
-                weight=0.9,
-                label = mytext, 
-                labelOptions = labelOptions(style = list("font-weight" = "normal", padding = "3px 8px"), 
-                                            textsize = "13px", direction = "auto")) %>% 
-    addLegend( pal=palette, 
-               values=~input$house1_explore, 
-               opacity=1, 
-               title = "Number of Battles per Region", 
-               position = "bottomleft",
-               bins = 3)
+  output$army_boxplot2 <- renderPlot({
+    
+    army_stats <- house_stats %>% 
+      select(house, army_size) %>% 
+      filter(house == input$house2_explore)
+    
+    ggplot(army_stats, aes(x= house, y=army_size)) +
+      geom_boxplot(fill = "slateblue") +
+      ylab("Army Size\n") +
+      xlab("")+
+      theme_classic() +
+      theme(legend.position = "", 
+            title = element_text(size=20, face = "bold"),
+            plot.title = element_text(hjust = 0.5),
+            axis.text.x = element_text(size = 15),
+            axis.text.y = element_text(size = 15))
+    
+  })
   
   
+  output$army_boxplot3 <- renderPlot({
+    
+    army_stats <- house_stats %>% 
+      select(house, army_size) %>% 
+      filter(house == input$house3_explore)
+    
+    ggplot(army_stats, aes(x= house, y=army_size)) +
+      geom_boxplot(fill = "slateblue") +
+      ylab("Army Size\n") +
+      xlab("")+
+      theme_classic() +
+      theme(legend.position = "", 
+            title = element_text(size=20, face = "bold"),
+            plot.title = element_text(hjust = 0.5),
+            axis.text.x = element_text(size = 15),
+            axis.text.y = element_text(size = 15))
+    
+  })
+  
+
+  
+  ### ALLIANCE FIGURES ###
+  
+  #Create battle type plot on Alliance tab based on alliances selection
+  output$battle_type_alliance <- renderPlot({
+    
+    battle_type_data <- house_stats %>%
+      filter(house == input$house1_pick | house == input$house2_pick | house == input$house3_pick)
+    
+    
+    ggplot(battle_type_data, aes(x=battle_type))+
+      geom_bar(aes(fill= outcome), position = "stack") +
+      theme_classic() +
+      theme(legend.position = "", 
+            title = element_text(size=20, face = "bold"),
+            plot.title = element_text(hjust = 0.5),
+            axis.text.x = element_text(size = 15),
+            axis.text.y = element_text(size = 15)
+      ) +
+      scale_fill_manual(values = c("red", "darkgreen")) +
+      scale_y_continuous(expand = c(0, 0), breaks = c(0,2,4,6,8,10,12,14,16,18,20,22,24,26)) +
+      xlab("")+
+      ylab("# of battles")+
+      ggtitle("Your Alliance's Battle Experience")+
+      coord_flip()
+    
+  })
+  
+  # create army size histogram for combined alliance
+  output$alliance_army_boxplot <- renderPlot({
+    
+    army_stats <- house_stats %>% 
+      select(house, army_size) %>% 
+      filter(house == input$house1_pick | house == input$house2_pick |house == input$house3_pick)
+    
+    ggplot(army_stats, aes(x= house, y=army_size)) +
+      geom_boxplot(fill = "slateblue") +
+      ylab("Army Size\n") +
+      xlab("")+
+      theme_classic() +
+      theme(legend.position = "", 
+            title = element_text(size=20, face = "bold"),
+            plot.title = element_text(hjust = 0.5),
+            axis.text.x = element_text(size = 15),
+            axis.text.y = element_text(size = 15))
+    
+  })
+  
+### BATTLE! ###
+  
+  #filter by alliance houses. select only columns with input of battle type and input of region
+  
+  score <- house_stats_summary %>% 
+    filter(house == input$house1_pick | house == input$house2_pick | house == input$house3_pick) %>% 
+    select(input$battle_type, input$region) 
+  
+  
+  #calculate scores
+  battle_score = (sum(score$input$battle_type)/2) #input from battle type
+  region_score = (sum(score$input$region)/2.5) #input from region
+  army_score = ((input$army_size/ 100000)*10) #input from slider bar/100,000
+  
+  #dragon inputs from radio buttons
+  with_dragon_score = (battle_score + region_score + army_score + 10)
+  without_dragon_score = (battle_score + region_score + army_score)
+  
+  
+  if (input$dragons == "Yes") 
+  {final_score <- with_dragon_score}
+  else { final_score <- without_dragon_score}
+  
+  
+  #survival probability calculation
+  survival_probability <- ((final_score / 40) * 100)
+  
+  
+  # render text with probability of survival 
+  
+  output$surival_probability <- renderText ({
+    
+    paste("The probability of victory is:", survival_probability)
+    
+    
   })
   
   
   
-
-# create army size boxplot
-
-output$army_boxplot1 <- renderPlot({
-  
-  army_stats <- house_stats %>% 
-    select(house, army_size) %>% 
-    filter(house == input$house1_explore)
-  
-  ggplot(army_stats, aes(x= house, y=army_size)) +
-    geom_boxplot(fill = "slateblue") +
-    ylab("Army Size\n") +
-    xlab("")+
-    theme_classic() +
-    theme(legend.position = "", 
-          title = element_text(size=20, face = "bold"),
-          plot.title = element_text(hjust = 0.5),
-          axis.text.x = element_text(size = 15),
-          axis.text.y = element_text(size = 15))
-  
-})
-
-output$army_boxplot2 <- renderPlot({
-  
-  army_stats <- house_stats %>% 
-    select(house, army_size) %>% 
-    filter(house == input$house2_explore)
-  
-  ggplot(army_stats, aes(x= house, y=army_size)) +
-    geom_boxplot(fill = "slateblue") +
-    ylab("Army Size\n") +
-    xlab("")+
-    theme_classic() +
-    theme(legend.position = "", 
-          title = element_text(size=20, face = "bold"),
-          plot.title = element_text(hjust = 0.5),
-          axis.text.x = element_text(size = 15),
-          axis.text.y = element_text(size = 15))
-  
-})
-
-
-output$army_boxplot3 <- renderPlot({
-  
-  army_stats <- house_stats %>% 
-    select(house, army_size) %>% 
-    filter(house == input$house3_explore)
-  
-  ggplot(army_stats, aes(x= house, y=army_size)) +
-    geom_boxplot(fill = "slateblue") +
-    ylab("Army Size\n") +
-    xlab("")+
-    theme_classic() +
-    theme(legend.position = "", 
-          title = element_text(size=20, face = "bold"),
-          plot.title = element_text(hjust = 0.5),
-          axis.text.x = element_text(size = 15),
-          axis.text.y = element_text(size = 15))
-  
-})
-
-
-
-
-
-### ALLIANCE FIGURES ###
-
-#Create battle type plot on Alliance tab based on alliances selection
-output$battle_type_alliance <- renderPlot({
-  
-  battle_type_data <- house_stats %>%
-    filter(house == input$house1_pick | house == input$house2_pick | house == input$house3_pick)
   
   
-  ggplot(battle_type_data, aes(x=battle_type))+
-    geom_bar(aes(fill= outcome), position = "stack") +
-    theme_classic() +
-    theme(legend.position = "", 
-          title = element_text(size=20, face = "bold"),
-          plot.title = element_text(hjust = 0.5),
-          axis.text.x = element_text(size = 15),
-          axis.text.y = element_text(size = 15)
-    ) +
-    scale_fill_manual(values = c("red", "darkgreen")) +
-    scale_y_continuous(expand = c(0, 0), breaks = c(0,2,4,6,8,10,12,14,16,18,20,22,24,26)) +
-    xlab("")+
-    ylab("# of battles")+
-    ggtitle("Your Alliance's Battle Experience")+
-    coord_flip()
   
-})
-
-# create army size histogram for combined alliance
-output$alliance_army_boxplot <- renderPlot({
   
-  army_stats <- house_stats %>% 
-    select(house, army_size) %>% 
-    filter(house == input$house1_pick | house == input$house2_pick |house == input$house3_pick)
   
-  ggplot(army_stats, aes(x= house, y=army_size)) +
-    geom_boxplot(fill = "slateblue") +
-    ylab("Army Size\n") +
-    xlab("")+
-    theme_classic() +
-    theme(legend.position = "", 
-          title = element_text(size=20, face = "bold"),
-          plot.title = element_text(hjust = 0.5),
-          axis.text.x = element_text(size = 15),
-          axis.text.y = element_text(size = 15))
   
-})
-
-
+  
 }
 
 # Run the application 
+
 shinyApp(ui = ui, server = server)

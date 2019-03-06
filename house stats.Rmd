@@ -96,6 +96,46 @@ plot(army_stats)
 
 
 
- # army size box plot
+```{r}
 
+filter summary stats df based on alliances
+
+experience score = sum(region) + sum(battle) 
+
+army score = (input army size/ 100000) * 10
+
+dragon score = 0 or 5
+
+total <- sum of all these
+  
+
+if with dragons, then use with dragons score
+if no dragons, use without score
+
+
+```
+
+
+```{r}
+
+score <- house_stats_summary %>% 
+  filter(house == "Baratheon" | house == "Lannister" | house == "Stark") %>% 
+  select(pitched_battle, Riverlands) # input of battle type and input of region
+
+battle_score = (sum(score$pitched_battle)/2) #input from battle type
+region_score = (sum(score$Riverlands)/2.5) #input from region
+
+army_score = ((50000/ 100000)*10) #input from slider bar/100,000
+
+If input = "with dragons",
+with_dragon_score = (battle_score + region_score + army_score + 10)
+without_dragon_score = (battle_score + region_score + army_score)
+
+
+survival_probability <- ((with_dragon_score / 40) * 100)
+
+
+
+
+```
 
