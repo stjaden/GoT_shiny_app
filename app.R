@@ -288,26 +288,26 @@ server <- function(input, output) {
   
   output$map_1 <- renderLeaflet({
   
-  mytext_bar=paste("Region: ", df_region$name, "<br/>", "# of battles: ", df_region$input$house1_explore)%>% 
+  mytext=paste("Region: ", df_region$name, "<br/>", "# of battles: ", df_region$input$house1_explore)%>% 
     lapply(htmltools::HTML)
   
   
-  pal_bar <- colorNumeric(
+  palette <- colorNumeric(
     palette = "Blues",
     domain = df_region$input$house1_explore)
   
   
  leaflet(df_region, options = leafletOptions(crs = leafletCRS(crsClass = "L.CRS.Simple"))) %>% 
-    addPolygons(fillColor = ~pal_bar(input$house1_explore), 
+    addPolygons(fillColor = ~palette(input$house1_explore), 
                 stroke=TRUE, 
                 fillOpacity = 0.9, 
                 color="black", 
                 weight=0.9,
-                label = mytext_bar, 
+                label = mytext, 
                 labelOptions = labelOptions(style = list("font-weight" = "normal", padding = "3px 8px"), 
                                             textsize = "13px", direction = "auto")) %>% 
-    addLegend( pal=pal_bar, 
-               values=~Baratheon, 
+    addLegend( pal=palette, 
+               values=~input$house1_explore, 
                opacity=1, 
                title = "Number of Battles per Region", 
                position = "bottomleft",
