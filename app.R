@@ -399,38 +399,10 @@ server <- function(input, output) {
   
   #filter by alliance houses. select only columns with input of battle type and input of region
   
-  score <- house_stats_summary %>% 
-    filter(house == input$house1_pick | house == input$house2_pick | house == input$house3_pick) %>% 
-    select(input$battle_type, input$region) 
+
   
   
-  #calculate scores
-  battle_score = (sum(score$input$battle_type)/2) #input from battle type
-  region_score = (sum(score$input$region)/2.5) #input from region
-  army_score = ((input$army_size/ 100000)*10) #input from slider bar/100,000
-  
-  #dragon inputs from radio buttons
-  with_dragon_score = (battle_score + region_score + army_score + 10)
-  without_dragon_score = (battle_score + region_score + army_score)
-  
-  
-  if (input$dragons == "Yes") 
-  {final_score <- with_dragon_score}
-  else { final_score <- without_dragon_score}
-  
-  
-  #survival probability calculation
-  survival_probability <- ((final_score / 40) * 100)
-  
-  
-  # render text with probability of survival 
-  
-  output$surival_probability <- renderText ({
-    
-    paste("The probability of victory is:", survival_probability)
-    
-    
-  })
+
   
   
   
