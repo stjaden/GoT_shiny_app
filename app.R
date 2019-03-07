@@ -154,11 +154,7 @@ ui <- fluidPage(
                         sidebarPanel(
                           
                           #input army size
-                          sliderInput("living_army_size",
-                                      "Alliance Army Size",
-                                      min = 1,
-                                      max = 59000,
-                                      value = 50000),
+                          if(interactive()) {uiOutput("army_size_slider") },
                           
                           #input region
                           selectInput("region", 
@@ -438,7 +434,46 @@ paste("Your Chance of Winning is ", sprintf("%.1f %%", survival_probability)) #o
 
   
   
-  
+  #create a dynamic slide bar for army size calculating the min and max based on house alliance selections
+  output$army_size_slider <- renderUI({
+    
+    #read in new sheet from excel data
+    house_stats_summary <- read_excel("house_stats.xlsx", 
+                                      sheet = "final_stats")
+    
+    #create a min army number based on the sum of selected houses for alliance
+    minimum_army <- house_stats_summary %>% 
+      filter(house == input$house1_pick | house == input$house2_pick | house == input$house3_pick) %>% 
+      select(min_army)
+    
+    mini_army <- data.matrix(minimum_army)
+    min_army_size = sum(mini_army)
+    
+    
+    #create a max army number based on the sum of selected houses for alliance
+    maximum_army <- house_stats_summary %>% 
+      filter(house == input$house1_pick | house == input$house2_pick | house == input$house3_pick) %>% 
+      select(max_army)
+    
+    max2_army <- data.matrix(maximum_army)
+    max_army_size = sum(max2_army)
+    
+    #create an average where the slider bar can start
+    
+    average_army_size = ((min_army_size + max_army_size)/2)
+    average_army_size <- as.numeric(average_army_size)
+    
+    #create a reactive input to be called in the ui with uiOutput
+    tagList(
+      sliderInput("living_army_size",
+                  "Select Your Alliance Army Size",
+                  min = min_army_size,
+                  max = max_army_size,
+                  value = average_army_size)
+    ) #tagList close
+    
+    
+  }) #close the renderUI for army_size_slider
   
   
   
