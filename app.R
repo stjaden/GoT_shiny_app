@@ -9,6 +9,7 @@ library(sf)
 library(tmap)
 library(plotly)
 library(htmltools)
+library(gameofthrones)
 
 
 #make house_stats data frame
@@ -290,7 +291,7 @@ server <- function(input, output) {
   
   output$army_boxplot1 <- renderPlot({
     
-    army_stats <- house_stats %>% 
+   army_stats <- house_stats %>% 
       select(house, army_size) %>% 
       filter(house == input$house1_explore)
     
