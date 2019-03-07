@@ -52,3 +52,19 @@ knitr::opts_chunk$set(echo = TRUE)
 
 ```
 
+```{r}
+
+dragons <- c("No")
+
+with_dragon_score = 20
+without_dragon_score = 10
+
+#based on dragon input (yes or no) return the appropriate of the two scores
+final_score <- if("Yes" %in% dragons) {final_score <- with_dragon_score} else {final_score <- without_dragon_score}
+
+#survival probability calculation
+survival_probability <- ((final_score / 40) * 100)
+win_percent <- paste(survival_probability)
+
+```
+

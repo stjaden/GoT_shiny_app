@@ -116,15 +116,15 @@ ui <- fluidPage(
                           
                           selectInput("house1_pick", 
                                       "Select House 1 for Alliance:",
-                                      choices = c("Stark","Lannister","Baratheon","Tully","Greyjoy","Frey","Bolton","Karstark","Mormont","Glover","Tyrell")
+                                      choices = c(Stark="Stark",Lannister="Lannister",Baratheon="Baratheon",Tully="Tully",Greyjoy="Greyjoy",Frey="Frey",Bolton="Bolton",Karstark="Karstark",Mormont="Mormont",Glover="Glover",Tyrell="Tyrell")
                           ),
                           selectInput("house2_pick",
                                       "Select House 2 for Alliance:",
-                                      choices = c("Stark","Lannister","Baratheon","Tully","Greyjoy","Frey","Bolton","Karstark","Mormont","Glover","Tyrell")
+                                      choices = c(Stark="Stark",Lannister="Lannister",Baratheon="Baratheon",Tully="Tully",Greyjoy="Greyjoy",Frey="Frey",Bolton="Bolton",Karstark="Karstark",Mormont="Mormont",Glover="Glover",Tyrell="Tyrell")
                           ),
                           selectInput("house3_pick",
                                       "Select House 3 for Alliance",
-                                      choices = c("Stark","Lannister","Baratheon","Tully","Greyjoy","Frey","Bolton","Karstark","Mormont","Glover","Tyrell")
+                                      choices = c(Stark="Stark",Lannister="Lannister",Baratheon="Baratheon",Tully="Tully",Greyjoy="Greyjoy",Frey="Frey",Bolton="Bolton",Karstark="Karstark",Mormont="Mormont",Glover="Glover",Tyrell="Tyrell")
                           )
                           
                         ), #close sidebar panel
@@ -161,26 +161,26 @@ ui <- fluidPage(
                           #input region
                           selectInput("region", 
                                       "Select the region to fight WW",
-                                      choices = c("The Crownlands","The North","The Reach", "The Riverlands", "The Stormlands", "The Westerlands")
+                                      choices = c(Crownlands="Crownlands",North="North",Reach="Reach",Riverlands="Riverlands",Stormlands="Stormlands",Westerlands="Westerlands")
                           ),
                           
                           #input battle types
                           selectInput("battle_type", 
                                       "Select battle types",
-                                      choices = c("ambush", "pitched battle", "razing", "siege")
+                                      choices = c(ambush="ambush", pitched_battle="pitched_battle", razing="razing", siege="siege")
                           ),
                           
                           
                           #select dragon preferences
                           selectInput("dragons", 
                                       "do you want dragons?",
-                                      choices = c("Yes", "No"))
+                                      choices = c(Yes="Yes", No="No"))
                           
                         ), #close sidebar panel
                       
                          # PLACEHOLDER: Show a plot of the generated distribution
                       mainPanel(
-                        fluidRow(plotOutput("survival_probability"))
+                        textOutput("win_percent")
                       
                             ) #close main panel
                         ) #close sidebar layout
@@ -397,11 +397,35 @@ server <- function(input, output) {
   
 ### BATTLE! ###
   
-  #filter by alliance houses. select only columns with input of battle type and input of region
-  
 
-  
-  
+  output$win_percent <- renderText({
+    
+#read in new sheet from excel data
+  house_stats_summary <- read_excel("house_stats.xlsx", sheet = "final_stats") 
+
+#filter by alliance houses. select only columns with input of battle type and input of region
+score <- house_stats_summary %>% 
+  filter(house == input$house1_pick | house == input$house2_pick | house == input$house3_pick) %>% 
+  select(input$battle_type, input$region)  
+
+#calculate scores
+battle_score = (sum(score$input$battle_type)/2) #input from battle type
+region_score = (sum(score$input$region)/2.5) #input from region
+army_score = ((input$army_size/ 100000)*10) #input from slider bar/100,000
+
+#calculate two possible scores: with and without dragons
+with_dragon_score = (battle_score + region_score + army_score + 10)
+without_dragon_score = (battle_score + region_score + army_score)
+
+#based on dragon input (yes or no) return the appropriate of the two scores
+final_score <- if("Yes" %in% input$dragons) {final_score <- with_dragon_score} else {final_score <- without_dragon_score}
+
+#survival probability calculation
+survival_probability <- ((final_score / 40) * 100)
+toString(survival_probability)
+survival_probability
+
+  }) #close out$win_percent renderText
 
   
   
