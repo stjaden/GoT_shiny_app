@@ -10,6 +10,7 @@ library(tmap)
 library(plotly)
 library(htmltools)
 library(gameofthrones)
+library(giphyr)
 
 
 #make house_stats data frame
@@ -181,7 +182,8 @@ ui <- fluidPage(
                       
                          # PLACEHOLDER: Show a plot of the generated distribution
                       mainPanel(
-                        textOutput("win_percent")
+                        textOutput("win_percent"),
+                        img(src = "winner.gif")
                       
                             ) #close main panel
                         ) #close sidebar layout
