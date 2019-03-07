@@ -183,7 +183,8 @@ ui <- fluidPage(
                          # PLACEHOLDER: Show a plot of the generated distribution
                       mainPanel(
                         textOutput("win_percent"),
-                        img(src = "winner.gif")
+                        fluidRow(imageOutput("winner"))
+                        
                       
                             ) #close main panel
                         ) #close sidebar layout
@@ -438,7 +439,50 @@ paste("Your Chance of Winning is ", sprintf("%.1f %%", survival_probability)) #o
 
   
   
+# images for output based on survival probability
   
+  output$winner <- renderImage({
+    
+    #read in new sheet from excel data
+    house_stats_summary <- read_excel("house_stats.xlsx", sheet = "final_stats") 
+    
+    #filter by alliance houses. select only columns with input of battle type and input of region
+    score <- house_stats_summary %>% 
+      filter(house == input$house1_pick | house == input$house2_pick | house == input$house3_pick) %>% 
+      select(input$battle_type, input$region)  
+    
+    battle_type_score_df <- score %>% #create just a dataframe for the battle_type score so this can be summed and sized into one number that is the score on a scale of 1-10 below
+      select(input$battle_type)
+    
+    region_score_df <- score %>% #create a dataframe for the region score so this can be summed and sized into one number that is a score on a scale of 1-10 below
+      select(input$region)
+    
+    #calculate scores
+    battle_score = (sum(battle_type_score_df)/2) #the sum of the battle type scores is measured on a scale of 0-20 (based on the maximum total number of battles for a given battle type by an alliance of three houses) and is resized by dividing by 2 into a reference score on a scale of 0-10
+    region_score = (sum(region_score_df)/2.5) #the sum of the region scores is measured on a scale of 0-25 (based on the maximum total number of battles for a given region by an alliance of three houses) and is resized by dividing by 2.5 into a reference score on a scale of 0-10
+    army_score = ((input$living_army_size/ 100000)*10) #input from slider bar (that will calculate the minimum and maximum combined army size based on the historical min and max army sizes for the smallest and largest three house armies) for army size is divided by 100,000 (the estimated size of the white walker army after their battle at Hardhome north of the wall where they added about this number of Freefolk to their army of the dead) to get a ratio of the living army size to the army of the dead size. It is then multiplied by 10 to get an army size score on a reference range of 0-10.
+    
+    #calculate two possible scores: with and without dragons
+    with_dragon_score = (battle_score + region_score + army_score + 10) #the battle type, region, and army size scores are summed and the with dragon score assumes that dragons are worth an additional 10 reference points towards the total alliance score
+    without_dragon_score = (battle_score + region_score + army_score) #no additional points awarded if you don't have dragons
+    
+    #based on dragon input (yes or no) return the appropriate of the two scores (with or without dragons)
+    final_score <- if("Yes" %in% input$dragons) {final_score <- with_dragon_score} else {final_score <- without_dragon_score}
+    
+    #survival probability calculation
+    survival_probability <- ((final_score / 40) * 100) #the final score is based out of a maximum score of 10 for battle type experience, 10 for region experience, 10 for army size for a total max score of 30. The Night King has an ice dragon which is assumed to be worth 10 additional points so the denominator for determining the survival probability is 40. It is then multiplied by 100 to get it into a percent.
+    
+    
+    
+     if (survival_probability > 50) {
+       img(src = "winter-is-here.jpg")
+       } 
+    
+    else{
+      img(src = "ww_kill.jpg")
+        }
+      
+    })
   
   
   
