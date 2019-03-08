@@ -56,7 +56,10 @@ ui <- fluidPage(
                         # text describing what graphs/outputs are and what they mean
                         fluidRow(
                           column(width = 12,
-                                 "Battle statistics and experience are shown for each house selected for exploration")
+                                 "Battle statistics and experience are shown for each house selected for exploration. 
+                                  The first output is a bar graph showing the type of battles each house has fought in. Red indicate a loss and green indicates win. 
+                                  The second output is a map showing the number of battles fought in each region.
+                                  The last output is a boxplot showing the army sizes of each house in different battles.")
                         ), 
                         
                         
@@ -137,7 +140,15 @@ ui <- fluidPage(
                           # text describing what graphs/outputs are and what they mean
                           fluidRow(
                             column(width = 12,
-                                   "Below are the combined battle statistics and experience for your choosen alliance")),
+                                   "Below are the combined battle statistics and experience for your choosen alliance.
+                                    The first output is a bar graph showing the combined battle experience of the selected alliance. Red indicate a loss and green indicates win. 
+                                    The second output is a map showing the combined regional experience of the selected alliance.
+                                    The last output is a boxplot showing the army sizes of each house.
+                                   
+                                   
+                                   
+                                   
+                                   ")),
                           
                           fluidRow(plotOutput("battle_type_alliance")),
                           fluidRow(plotOutput("alliance_army_boxplot"))
@@ -158,28 +169,28 @@ ui <- fluidPage(
                           
                           #input region
                           selectInput("region", 
-                                      "Select the region to fight WW",
+                                      "Select where to fight",
                                       choices = c(Crownlands="Crownlands",North="North",Reach="Reach",Riverlands="Riverlands",Stormlands="Stormlands",Westerlands="Westerlands")
                           ),
                           
                           #input battle types
                           selectInput("battle_type", 
-                                      "Select battle types",
+                                      "Select the type of battle to fight",
                                       choices = c(ambush="ambush", pitched_battle="pitched_battle", razing="razing", siege="siege")
                           ),
                           
                           
                           #select dragon preferences
                           selectInput("dragons", 
-                                      "do you want dragons?",
-                                      choices = c(Yes="Yes", No="No"))
+                                      "Do you want dragons?",
+                                      choices = c(Yes="Duh!", No="No, I'm stupid"))
                           
                         ), #close sidebar panel
                       
                          # PLACEHOLDER: Show a plot of the generated distribution
                       mainPanel(
                         textOutput("win_percent"),
-                        fluidRow(imageOutput("winner"))
+                        img(src = "winner.gif")
                         
                       
                             ) #close main panel
@@ -429,7 +440,7 @@ final_score <- if("Yes" %in% input$dragons) {final_score <- with_dragon_score} e
 #survival probability calculation
 survival_probability <- ((final_score / 40) * 100) #the final score is based out of a maximum score of 10 for battle type experience, 10 for region experience, 10 for army size for a total max score of 30. The Night King has an ice dragon which is assumed to be worth 10 additional points so the denominator for determining the survival probability is 40. It is then multiplied by 100 to get it into a percent.
 
-paste("Your Chance of Winning is ", sprintf("%.1f %%", survival_probability)) #output text before the score and format the survival probability with one number after the decimal point and with a % sign.
+paste("The three-eyed raven has seen that your chance of winning is... ", sprintf("%.1f %%", survival_probability)) #output text before the score and format the survival probability with one number after the decimal point and with a % sign.
 
   }) #close out$win_percent renderText
 
