@@ -154,7 +154,7 @@ ui <- fluidPage(
                         sidebarPanel(
                           
                           #input army size
-                          if(interactive()) {uiOutput("army_size_slider") },
+                          uiOutput("army_size_slider"),
                           
                           #input region
                           selectInput("region", 
@@ -435,7 +435,7 @@ paste("Your Chance of Winning is ", sprintf("%.1f %%", survival_probability)) #o
 
   
   
-<<<<<<< HEAD
+
 # images for output based on survival probability
   
   output$winner <- renderImage({
@@ -480,7 +480,7 @@ paste("Your Chance of Winning is ", sprintf("%.1f %%", survival_probability)) #o
         }
       
     })
-=======
+
   #create a dynamic slide bar for army size calculating the min and max based on house alliance selections
   output$army_size_slider <- renderUI({
     
@@ -521,7 +521,7 @@ paste("Your Chance of Winning is ", sprintf("%.1f %%", survival_probability)) #o
     
     
   }) #close the renderUI for army_size_slider
->>>>>>> 99718a67f8a69d1772b099f24a8381e470d62e10
+
   
   
   
