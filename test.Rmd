@@ -68,3 +68,25 @@ win_percent <- paste(survival_probability)
 
 ```
 
+
+
+
+
+```{r}
+
+library(giphyr)
+library(shiny)
+
+add_gifs()
+
+
+```
+
+
+
+
+
+
+
+
+
