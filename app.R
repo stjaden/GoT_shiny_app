@@ -165,7 +165,7 @@ ui <- fluidPage(
                         sidebarPanel(
                           
                           #input army size
-                          if(interactive()) {uiOutput("army_size_slider") },
+                          uiOutput("army_size_slider"),
                           
                           #input region
                           selectInput("region", 
