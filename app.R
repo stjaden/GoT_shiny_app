@@ -34,9 +34,9 @@ ui <- fluidPage(
              
              #Introduction Tab
              tabPanel("Introduction",
-                      h1("Winter is Coming"),
+                      h1("Winter is Here"),
                       h2("And Only You Can Stop It"),
-                      p("The White Walkers have broken through the wall and are descending on the citizens of Westeros. Only you can can stop the army of the dead, but first you must decide where, how, and with whom you will fight them. Choose your alliances carefully and decide on a location to make your stand. Devise a battle plan and find out what your chances of victory are. Winter is coming..."),
+                      p("The White Walkers have broken through the wall and are descending on the citizens of Westeros. Only you can can stop the army of the dead, but first you must decide where, how, and with whom you will fight them. Choose your alliances carefully and decide on a location to make your stand. Devise a battle plan and find out what your chances of victory are. Winter is here..."),
                       img(src = "winter-is-here.jpg"),
                       h3("Data Summary"),
                       p("Data used in this app was adapted from Chris Albon's War of the Five Kings data set. 
