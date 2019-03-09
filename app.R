@@ -193,11 +193,11 @@ ui <- fluidPage(
                          # PLACEHOLDER: Show a plot of the generated distribution
                       mainPanel(
                         h3(textOutput("win_percent")),
-                        fluidRow(verbatimTextOutput("win_lose")),
                         fluidRow(conditionalPanel(condition = "output.win_lose == 'The living likely triumph'",
                                                   img(src = "winner.gif"))),
                         fluidRow(conditionalPanel(condition = "output.win_lose == 'The dead likely triumph'",
-                                                  img(src = "loser1.gif")))
+                                                  img(src = "loser1.gif"))),
+                        fluidRow(verbatimTextOutput("win_lose"))
                         
                       
                             ) #close main panel
