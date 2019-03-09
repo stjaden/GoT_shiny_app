@@ -183,14 +183,21 @@ ui <- fluidPage(
                           #select dragon preferences
                           radioButtons("dragons", 
                                       "Do you want dragons?",
-                                      choices = c(Yes="Yes", No="No"))
+                                      choices = c(Yes="Yes", No="No")),
                           
+                        #action button
+                        actionButton("ShowCond", "Battle!")
+                            
                         ), #close sidebar panel
                       
                          # PLACEHOLDER: Show a plot of the generated distribution
                       mainPanel(
                         h3(textOutput("win_percent")),
-                        img(src = "winner.gif")
+                        fluidRow(verbatimTextOutput("win_lose")),
+                        fluidRow(conditionalPanel(condition = "output.win_lose == 'The living likely triumph'",
+                                                  img(src = "winner.gif"))),
+                        fluidRow(conditionalPanel(condition = "output.win_lose == 'The dead likely triumph'",
+                                                  img(src = "loser1.gif")))
                         
                       
                             ) #close main panel
@@ -488,9 +495,38 @@ paste("The three-eyed raven has seen that your chance of winning is... ", sprint
   }) #close the renderUI for army_size_slider
 
   
+  var <- eventReactive(input$ShowCond, {
+    #repeat survival_probability calculations
+    
+    house_stats_summary <- read_excel("house_stats.xlsx", sheet = "final_stats") 
+    
+    score <- house_stats_summary %>% 
+      filter(house == input$house1_pick | house == input$house2_pick | house == input$house3_pick) %>% 
+      select(input$battle_type, input$region)  
+    
+    battle_type_score_df <- score %>% 
+      select(input$battle_type)
+    
+    region_score_df <- score %>% 
+      select(input$region)
+    
+    battle_score = (sum(battle_type_score_df)/2) 
+    region_score = (sum(region_score_df)/2.5)
+    army_score = ((input$living_army_size/ 100000)*10) 
+    
+    with_dragon_score = (battle_score + region_score + army_score + 10)
+    without_dragon_score = (battle_score + region_score + army_score) 
+    final_score <- if("Yes" %in% input$dragons) {final_score <- with_dragon_score} else {final_score <- without_dragon_score}
+    
+    survival_probability <- ((final_score / 40) * 100) 
+    
+    result_text <- if(survival_probability>50) {result_text <- "The living likely triumph"} else {final_score <- "The dead likely triumph"}
+result_text
+  })
   
-  
-  
+  output$win_lose <- renderText({
+    paste(var())
+  })
   
   
   
