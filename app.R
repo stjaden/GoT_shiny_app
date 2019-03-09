@@ -54,10 +54,11 @@ ui <- fluidPage(
                       mainPanel(
                         
                         # text describing what graphs/outputs are and what they mean
+                        h3("Explore House Battle Stats"),
                         fluidRow(
                           column(width = 12,
                                  "Battle statistics and experience are shown for each house selected for exploration. 
-                                  The first output is a bar graph showing the type of battles each house has fought in. Red indicate a loss and green indicates win. 
+                                  The first output is a bar graph showing the type of battles each house has fought in. Red indicates a loss and green indicates a win. 
                                   The second output is a map showing the number of battles fought in each region.
                                   The last output is a boxplot showing the army sizes of each house in different battles.")
                         ), 
@@ -118,6 +119,7 @@ ui <- fluidPage(
                       # Sidebar: Sidebar with a slider for army sizes and radio buttons for picking alliance 
                       sidebarLayout(
                         sidebarPanel(
+                          h3("Choose Your Alliance"),
                           
                           selectInput("house1_pick", 
                                       "Select House 1 for Alliance:",
@@ -140,10 +142,10 @@ ui <- fluidPage(
                           # text describing what graphs/outputs are and what they mean
                           fluidRow(
                             column(width = 12,
-                                   "Below are the combined battle statistics and experience for your choosen alliance.
-                                    The first output is a bar graph showing the combined battle experience of the selected alliance. Red indicate a loss and green indicates win. 
+                                   "Below are the combined battle statistics and experience for your chosen alliance.
+                                    The first output is a bar graph showing the combined battle experience of the selected alliance. Red indicates a loss and green indicates a win. 
                                     The second output is a map showing the combined regional experience of the selected alliance.
-                                    The last output is a boxplot showing the army sizes of each house.
+                                    The last output is a boxplot showing the army sizes of each house in your alliance.
                                    
                                    
                                    
@@ -163,6 +165,7 @@ ui <- fluidPage(
              tabPanel("Battle Results",
                     sidebarLayout(
                         sidebarPanel(
+                          h3("Devise Your Battle Plan"),
                           
                           #input army size
                           uiOutput("army_size_slider"),
