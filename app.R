@@ -41,11 +41,11 @@ ui <- fluidPage(
                       h3("Data Summary"),
                       p("Data used in this app was adapted from Chris Albon's War of the Five Kings data set. 
                         The original contains a dataset of the battles in the War of the Five Kingsfrom George R.R. Martin's A Song Of Ice And Fire series.
-                        Original data can be found at: https://github.com/chrisalbon/war_of_the_five_kings_dataset. Supplemental data from A Wiki of Ice and Fire was used when necessary and can be found at: https://awoiaf.westeros.org/index.php/Military_strength#The_Reach.")
-                      ),
+                        Original data can be found at: https://github.com/chrisalbon/war_of_the_five_kings_dataset. Supplemental data from A Wiki of Ice and Fire was used when necessary and can be found at: https://awoiaf.westeros.org/index.php/Military_strength#The_Reach."),
+                      
              p("Created by: Alexander Stejskal, Savannah Tjaden, and Austin Melcher")
              
-             ,
+             ),
              
              #Explore Alliances Tab
              tabPanel("Explore Alliances",

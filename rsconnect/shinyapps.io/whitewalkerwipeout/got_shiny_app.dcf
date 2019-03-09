@@ -5,6 +5,8 @@ account: whitewalkerwipeout
 server: shinyapps.io
 hostUrl: https://api.shinyapps.io/v1
 appId: 778313
-bundleId: 1927785
+bundleId: 1927943
 url: https://whitewalkerwipeout.shinyapps.io/got_shiny_app/
-when: 1552161582.93801
+when: 1552171340.89449
+asMultiple: FALSE
+asStatic: FALSE
