@@ -189,7 +189,7 @@ ui <- fluidPage(
                       
                          # PLACEHOLDER: Show a plot of the generated distribution
                       mainPanel(
-                        textOutput("win_percent"),
+                        h3(textOutput("win_percent")),
                         img(src = "winner.gif")
                         
                       
