@@ -30,7 +30,7 @@ ui <- fluidPage(
   # Title
   titlePanel("White Walker WIPEOUT"),
   
-  navbarPage("Winter is Coming",
+  navbarPage("Winter is Here",
              
              #Introduction Tab
              tabPanel("Introduction",
