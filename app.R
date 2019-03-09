@@ -37,11 +37,11 @@ ui <- fluidPage(
                       h1("Winter is Coming"),
                       h2("And Only You Can Stop It"),
                       p("The White Walkers have broken through the wall and are descending on the citizens of Westeros. Only you can can stop the army of the dead, but first you must decide where, how, and with whom you will fight them. Choose your alliances carefully and decide on a location to make your stand. Devise a battle plan and find out what you chances of victory are. Winter is coming..."),
+                      img(src = "winter-is-here.jpg"),
                       h3("Data Summary"),
                       p("Data used in this app was adapted from Chris Albon's War of the Five Kings data set. 
                         The original contains a dataset of the battles in the War of the Five Kingsfrom George R.R. Martin's A Song Of Ice And Fire series.
-                        Original data can be found at: https://github.com/chrisalbon/war_of_the_five_kings_dataset"),
-                      img(src = "winter-is-here.jpg")
+                        Original data can be found at: https://github.com/chrisalbon/war_of_the_five_kings_dataset")
                       )
              
              ,
@@ -181,9 +181,9 @@ ui <- fluidPage(
                           
                           
                           #select dragon preferences
-                          selectInput("dragons", 
+                          radioButtons("dragons", 
                                       "Do you want dragons?",
-                                      choices = c(Yes="Duh!", No="No, I'm stupid"))
+                                      choices = c(Yes="Yes", No="No"))
                           
                         ), #close sidebar panel
                       
