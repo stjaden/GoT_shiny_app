@@ -9,9 +9,9 @@ library(sf)
 library(tmap)
 library(plotly)
 library(htmltools)
-library(gameofthrones)
 library(giphyr)
 
+### Upfront Data Wrangling ###
 
 #make house_stats data frame
 house_stats <- read_excel("house_stats.xlsx", 
@@ -23,16 +23,18 @@ house_stats$house <- as.factor(house_stats$house)
 
 
 
-#################### User Interface
+#################### User Interface  ########################################################
 ui <- fluidPage(
   theme = shinytheme("flatly"),
   
-  # Title
+#Title
   titlePanel("White Walker WIPEOUT"),
   
   navbarPage("Winter is Here",
-             
-             #Introduction Tab
+          
+                
+################## Introduction Tab
+
              tabPanel("Introduction",
                       h1("Winter is Here"),
                       h2("And Only You Can Stop It"),
@@ -44,14 +46,13 @@ ui <- fluidPage(
                         Original data can be found at: https://github.com/chrisalbon/war_of_the_five_kings_dataset. Supplemental data from A Wiki of Ice and Fire was used when necessary and can be found at: https://awoiaf.westeros.org/index.php/Military_strength#The_Reach."),
                       
              p("Created by: Alexander Stejskal, Savannah Tjaden, and Austin Melcher")
-             
              ),
-             
-             #Explore Alliances Tab
+       
+      
+################# Explore Alliances Tab
+
              tabPanel("Explore Alliances",
                       
-                      
-                      # PLACEHOLDER: Show a plot of the generated distribution
                       mainPanel(
                         
                         # text describing what graphs/outputs are and what they mean
@@ -63,8 +64,6 @@ ui <- fluidPage(
                                   The second output is a map showing the number of battles fought in each region.
                                   The last output is a boxplot showing the army sizes of each house in different battles.")
                         ), 
-                        
-                        
                         
                         # Column Headers
                         fluidRow(
@@ -83,9 +82,6 @@ ui <- fluidPage(
                           ))
                         ),  
                         
-                        
-                        
-                        
                         # Battle type stats graphs
                         fluidRow(
                           column(4, plotOutput("battle_type_hist1")),
@@ -93,51 +89,45 @@ ui <- fluidPage(
                           column(4, plotOutput("battle_type_hist3"))
                         ),
                         
-                        
                         # Regional battle experience
                         fluidRow(
                           column(4, wellPanel(p("map_1"))),
                           column(4, wellPanel(p("map_2"))),
                           column(4, wellPanel(p("map_3")))
                         ),
-                        
-                        
+                      
                         # Army size boxplot
                         fluidRow(
                           column(4, plotOutput("army_boxplot1")),
                           column(4, plotOutput("army_boxplot2")),
                           column(4, plotOutput("army_boxplot3"))
                         )
-                        
-                        
-                        
                       )),
-             
-             
-             #Pick Alliances Tab
+         
+   
+################### Pick Alliances Tab
+
              tabPanel("Pick Alliances",
                       
-                      # Sidebar: Sidebar with a slider for army sizes and radio buttons for picking alliance 
+                      # Sidebar with a slider for army sizes and radio buttons for picking alliance 
                       sidebarLayout(
                         sidebarPanel(
                           h3("Choose Your Alliance"),
                           
                           selectInput("house1_pick", 
                                       "Select House 1 for Alliance:",
-                                      choices = c(Stark="Stark",Lannister="Lannister",Baratheon="Baratheon",Tully="Tully",Greyjoy="Greyjoy",Frey="Frey",Bolton="Bolton",Karstark="Karstark",Mormont="Mormont",Glover="Glover",Tyrell="Tyrell")
+                                      choices = c("Stark","Lannister","Baratheon","Tully","Greyjoy","Frey","Bolton","Karstark","Mormont","Glover","Tyrell")
                           ),
                           selectInput("house2_pick",
                                       "Select House 2 for Alliance:",
-                                      choices = c(Stark="Stark",Lannister="Lannister",Baratheon="Baratheon",Tully="Tully",Greyjoy="Greyjoy",Frey="Frey",Bolton="Bolton",Karstark="Karstark",Mormont="Mormont",Glover="Glover",Tyrell="Tyrell")
+                                      choices = c("Stark","Lannister","Baratheon","Tully","Greyjoy","Frey","Bolton","Karstark","Mormont","Glover","Tyrell")
                           ),
                           selectInput("house3_pick",
                                       "Select House 3 for Alliance",
-                                      choices = c(Stark="Stark",Lannister="Lannister",Baratheon="Baratheon",Tully="Tully",Greyjoy="Greyjoy",Frey="Frey",Bolton="Bolton",Karstark="Karstark",Mormont="Mormont",Glover="Glover",Tyrell="Tyrell")
+                                      choices = c("Stark","Lannister","Baratheon","Tully","Greyjoy","Frey","Bolton","Karstark","Mormont","Glover","Tyrell")
                           )
-                          
-                        ), #close sidebar panel
+                                  ), #close sidebar panel
                         
-                        # pLACEHOLDER: Show a plot of the generated distribution
                         mainPanel(
                           
                           # text describing what graphs/outputs are and what they mean
@@ -147,22 +137,17 @@ ui <- fluidPage(
                                     The first output is a bar graph showing the combined battle experience of the selected alliance. Red indicates a loss and green indicates a win. 
                                     The second output is a map showing the combined regional experience of the selected alliance.
                                     The last output is a boxplot showing the army sizes of each house in your alliance.
-                                   
-                                   
-                                   
-                                   
                                    ")),
                           
                           fluidRow(plotOutput("battle_type_alliance")),
                           fluidRow(plotOutput("alliance_army_boxplot"))
-                          
-
                         ) #close main panel
                       ) #close sidebar layout
                     ), #close pick alliance tab
              
         
-             #Battle Results
+################## Battle Results Tab
+
              tabPanel("Battle Results",
                     sidebarLayout(
                         sidebarPanel(
@@ -174,27 +159,26 @@ ui <- fluidPage(
                           #input region
                           selectInput("region", 
                                       "Select where to fight",
-                                      choices = c(Crownlands="Crownlands",North="North",Reach="Reach",Riverlands="Riverlands",Stormlands="Stormlands",Westerlands="Westerlands")
+                                      choices = c("The Crownlands"="Crownlands","The North"="North","The Reach"="Reach","The Riverlands"="Riverlands","The Stormlands"="Stormlands","The Westerlands"="Westerlands")
                           ),
                           
                           #input battle types
                           selectInput("battle_type", 
                                       "Select the type of battle to fight",
-                                      choices = c(ambush="ambush", pitched_battle="pitched_battle", razing="razing", siege="siege")
+                                      choices = c("Ambush"="ambush", "Pitched Battle"="pitched_battle", "Razing"="razing", "Siege"="siege")
                           ),
-                          
                           
                           #select dragon preferences
                           radioButtons("dragons", 
                                       "Do you want dragons?",
                                       choices = c(Yes="Yes", No="No")),
                           
-                        #action button
+                        #battle action button
                         actionButton("ShowCond", "Battle!")
                             
                         ), #close sidebar panel
                       
-                         # PLACEHOLDER: Show a plot of the generated distribution
+                         #Output win or lose text and gif
                       mainPanel(
                         h3(textOutput("win_percent")),
                         fluidRow(conditionalPanel(condition = "output.win_lose == 'The living likely triumph'",
@@ -203,33 +187,22 @@ ui <- fluidPage(
                                                   img(src = "loser1.gif"))),
                         fluidRow(verbatimTextOutput("win_lose"))
                         
-                      
                             ) #close main panel
                         ) #close sidebar layout
                     ) #close pick alliance tab
-
-             
-             
       ) #close navbar page
-  
-  ) #close whole thin
+  ) #close UI
 
 
 
 
-
-
-
-
-
-
-
-########################## Server
+########################## Server  #########################################################
 server <- function(input, output) {
   
-  ### EXPLORE FIGURES ###
+############ EXPLORE TAB FIGURES
   
-  #Create battle type histogram 1 on Explore tab based on house 1 selection
+### Battle Type Histogram ###
+  
   output$battle_type_hist1 <- renderPlot({
     
     battle_type_data <- house_stats %>%
@@ -254,7 +227,6 @@ server <- function(input, output) {
     
   })
   
-  #Create battle type histogram 2 on Explore tab based on house 1 selection
   output$battle_type_hist2 <- renderPlot({
     
     battle_type_data <- house_stats %>%
@@ -279,7 +251,6 @@ server <- function(input, output) {
     
   })
   
-  #Create battle type histogram 3 on Explore tab based on house 1 selection
   output$battle_type_hist3 <- renderPlot({
     
     battle_type_data <- house_stats %>%
@@ -304,11 +275,11 @@ server <- function(input, output) {
     
   })
   
-  #create a map of regional experience based on house input
+### Maps of Regional Experience ###
 
 
   
-  # create army size boxplot
+### Army Size Box Plots ###
   
   output$army_boxplot1 <- renderPlot({
     
@@ -370,9 +341,10 @@ server <- function(input, output) {
   
 
   
-  ### ALLIANCE FIGURES ###
+################# ALLIANCE TAB FIGURES
   
-  #Create battle type plot on Alliance tab based on alliances selection
+### Battle Type Histogram ###
+  
   output$battle_type_alliance <- renderPlot({
     
     battle_type_data <- house_stats %>%
@@ -397,7 +369,8 @@ server <- function(input, output) {
     
   })
   
-  # create army size histogram for combined alliance
+### Army Size Box Plot ###
+  
   output$alliance_army_boxplot <- renderPlot({
     
     army_stats <- house_stats %>% 
@@ -417,9 +390,10 @@ server <- function(input, output) {
     
   })
   
-### BATTLE! ###
+################## BATTLE TAB OUTPUTS
   
-
+### Win Percentage Text Output ###
+  
   output$win_percent <- renderText({
     
 #read in new sheet from excel data
@@ -456,7 +430,8 @@ paste("The three-eyed raven has seen that your chance of winning is... ", sprint
   }) #close out$win_percent renderText
 
   
-
+### Dynamic Slider Inputs ###
+  
   #create a dynamic slide bar for army size calculating the min and max based on house alliance selections
   output$army_size_slider <- renderUI({
     
@@ -472,7 +447,6 @@ paste("The three-eyed raven has seen that your chance of winning is... ", sprint
     mini_army <- data.matrix(minimum_army)
     min_army_size = sum(mini_army)
     
-    
     #create a max army number based on the sum of selected houses for alliance
     maximum_army <- house_stats_summary %>% 
       filter(house == input$house1_pick | house == input$house2_pick | house == input$house3_pick) %>% 
@@ -482,7 +456,6 @@ paste("The three-eyed raven has seen that your chance of winning is... ", sprint
     max_army_size = sum(max2_army)
     
     #create an average where the slider bar can start
-    
     average_army_size = ((min_army_size + max_army_size)/2)
     average_army_size <- as.numeric(average_army_size)
     
@@ -495,9 +468,10 @@ paste("The three-eyed raven has seen that your chance of winning is... ", sprint
                   value = average_army_size)
     ) #tagList close
     
-    
   }) #close the renderUI for army_size_slider
 
+  
+### Result Text Output ###
   
   var <- eventReactive(input$ShowCond, {
     #repeat survival_probability calculations
@@ -532,10 +506,10 @@ result_text
     paste(var())
   })
   
-  
-  
 }
 
-# Run the application 
+
+
+### Run the application ###
 
 shinyApp(ui = ui, server = server)
