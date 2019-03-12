@@ -165,7 +165,7 @@ ui <- fluidPage(
                           
                           #select dragon preferences
                           radioButtons("dragons", 
-                                      "Do you want dragons?",
+                                      "Do you want to battle with dragons?",
                                       choices = c(Yes="Yes", No="No")),
                           
                         #battle action button
@@ -452,7 +452,7 @@ paste("The three-eyed raven has seen that your chance of winning is... ", sprint
     #create a reactive input to be called in the ui with uiOutput
     tagList(
       sliderInput("living_army_size",
-                  "Select Your Alliance Army Size",
+                  "Select your alliance army size",
                   min = min_army_size,
                   max = max_army_size,
                   value = average_army_size)
@@ -463,10 +463,10 @@ paste("The three-eyed raven has seen that your chance of winning is... ", sprint
   
 ### Result Text Output ###
   
-  var <- eventReactive(input$ShowCond, {
-    #repeat survival_probability calculations
+  battle_result <- eventReactive(input$ShowCond, {
     
-    house_stats_summary <- read_excel("house_stats.xlsx", sheet = "final_stats") 
+    #repeat survival_probability calculations
+        house_stats_summary <- read_excel("house_stats.xlsx", sheet = "final_stats") 
     
     score <- house_stats_summary %>% 
       filter(house == input$house1_pick | house == input$house2_pick | house == input$house3_pick) %>% 
@@ -489,11 +489,11 @@ paste("The three-eyed raven has seen that your chance of winning is... ", sprint
     survival_probability <- ((final_score / 40) * 100) 
     
     result_text <- if(survival_probability>50) {result_text <- "The living likely triumph"} else {final_score <- "The dead likely triumph"}
-result_text
+result_text #output conditional text statement based on survival_probability
   })
   
   output$win_lose <- renderText({
-    paste(var())
+    paste(battle_result())
   })
   
 } #close server
