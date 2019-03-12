@@ -1,13 +1,10 @@
 library(shiny)
 library(tidyverse)
 library(shinythemes)
-library(gridExtra)
 library(readr)
 library(readxl)
 library(leaflet)
 library(sf)
-library(tmap)
-library(plotly)
 library(htmltools)
 library(giphyr)
 
@@ -20,7 +17,6 @@ house_stats <- read_excel("house_stats.xlsx",
 house_stats$outcome <- as.factor(house_stats$outcome)
 house_stats$battle_type <- as.factor(house_stats$battle_type)
 house_stats$house <- as.factor(house_stats$house)
-
 
 
 #################### User Interface  ########################################################
