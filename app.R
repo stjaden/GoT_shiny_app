@@ -201,13 +201,12 @@ server <- function(input, output) {
   
 ############ EXPLORE TAB FIGURES
   
-### Battle Type Histogram ###
+### Battle Type Histograms ###
   
   output$battle_type_hist1 <- renderPlot({
     
     battle_type_data <- house_stats %>%
       filter(house == input$house1_explore)
-    
     
     ggplot(battle_type_data, aes(x=battle_type))+
       geom_bar(aes(fill= outcome), position = "stack") +
@@ -232,7 +231,6 @@ server <- function(input, output) {
     battle_type_data <- house_stats %>%
       filter(house == input$house2_explore)
     
-    
     ggplot(battle_type_data, aes(x=battle_type))+
       geom_bar(aes(fill= outcome), position = "stack") +
       theme_classic() +
@@ -255,7 +253,6 @@ server <- function(input, output) {
     
     battle_type_data <- house_stats %>%
       filter(house == input$house3_explore)
-    
     
     ggplot(battle_type_data, aes(x=battle_type))+
       geom_bar(aes(fill= outcome), position = "stack") +
@@ -319,7 +316,6 @@ server <- function(input, output) {
     
   })
   
-  
   output$army_boxplot3 <- renderPlot({
     
     army_stats <- house_stats %>% 
@@ -339,7 +335,6 @@ server <- function(input, output) {
     
   })
   
-
   
 ################# ALLIANCE TAB FIGURES
   
@@ -349,7 +344,6 @@ server <- function(input, output) {
     
     battle_type_data <- house_stats %>%
       filter(house == input$house1_pick | house == input$house2_pick | house == input$house3_pick)
-    
     
     ggplot(battle_type_data, aes(x=battle_type))+
       geom_bar(aes(fill= outcome), position = "stack") +
@@ -390,6 +384,7 @@ server <- function(input, output) {
     
   })
   
+  
 ################## BATTLE TAB OUTPUTS
   
 ### Win Percentage Text Output ###
@@ -427,7 +422,7 @@ survival_probability <- ((final_score / 40) * 100) #the final score is based out
 
 paste("The three-eyed raven has seen that your chance of winning is... ", sprintf("%.1f %%", survival_probability)) #output text before the score and format the survival probability with one number after the decimal point and with a % sign.
 
-  }) #close out$win_percent renderText
+  })
 
   
 ### Dynamic Slider Inputs ###
