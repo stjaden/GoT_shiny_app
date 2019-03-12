@@ -67,7 +67,6 @@ ui <- fluidPage(
                                                 "House 1 Battle Stats:",
                                                 choices = c(Stark="Stark",Lannister="Lannister",Baratheon="Baratheon",Tully="Tully",Greyjoy="Greyjoy",Frey="Frey",Bolton="Bolton",Karstark="Karstark",Mormont="Mormont",Glover="Glover",Tyrell="Tyrell")
                           )),
-                          
                           column(4, selectInput("house2_explore",
                                                 "House 2 Battle Stats:",
                                                 choices = c(Stark="Stark",Lannister="Lannister",Baratheon="Baratheon",Tully="Tully",Greyjoy="Greyjoy",Frey="Frey",Bolton="Bolton",Karstark="Karstark",Mormont="Mormont",Glover="Glover",Tyrell="Tyrell")
@@ -497,7 +496,7 @@ result_text
     paste(var())
   })
   
-}
+} #close server
 
 
 
