@@ -86,9 +86,9 @@ ui <- fluidPage(
                         
                         # Regional battle experience
                         fluidRow(
-                          column(4, wellPanel(p("map_1"))),
-                          column(4, wellPanel(p("map_2"))),
-                          column(4, wellPanel(p("map_3")))
+                          column(4, plotOutput("map_1")),
+                          column(4, plotOutput("map_2")),
+                          column(4, plotOutput("map_3"))
                         ),
                       
                         # Army size boxplot
@@ -269,6 +269,54 @@ server <- function(input, output) {
   
 ### Maps of Regional Experience ###
 
+  
+  output$map_1 <- renderImage({
+  
+    filename <- normalizePath(file.path('.',
+                                      paste('', input$house1_explore,
+                                            '.png', sep = '')))
+  
+  list(src = filename)
+}, deleteFile = FALSE)
+
+#####################  
+  
+
+  output$map_2 <- renderImage({
+  
+    filename <- normalizePath(file.path('.',
+                                      paste('', input$house2_explore,
+                                            '.png', sep = '')))
+  
+  list(src = filename)
+}, deleteFile = FALSE)
+
+  
+
+######################  
+  
+  
+  output$map_3 <- renderImage({
+  
+    filename <- normalizePath(file.path('.',
+                                      paste('', input$house3_explore,
+                                            '.png', sep = '')))
+  
+  list(src = filename)
+}, deleteFile = FALSE)
+
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
 
   
 ### Army Size Box Plots ###

@@ -19,6 +19,7 @@ library(plotly)
 library(leaflet)
 library(htmltools)
 library(readxl)
+library(ggrepel)
 #library(editData)
 #library(forcats)
 #library(dplyr)
@@ -42,46 +43,26 @@ got_region <- st_read(dsn = ".", layer = "Political")
 
 
 
+
+
 ```{r}
 got_region$name <- as.character(got_region$name)
 
-got_region$name <- ifelse(is.na(got_region2$name),
-                           'Beyond the Wall', got_region$name)
-
 got_region %>% 
   replace_na(list(name = "Beyond the Wall"))
- ```
-
-
-
-```{r}
-region <- got_region %>% 
-  dplyr::select(name)
-
-plot(region)
 ```
+
+
 
 
 ```{r}
 region_df <- full_join(got_region, battle_location_map2)
-
-
 ```
+
 
 
 House dataframes
 ```{r}
-
-house <- region_df %>% 
-  dplyr::select(name, Baratheon) %>% 
-  replace_na(list(name = "Beyond the Wall", Baratheon = "0"))
-
-df_baratheon$Baratheon <- as.numeric(as.character(df_baratheon$Baratheon))
-
-
-
-
-
 
 
 df_baratheon <- region_df %>% 
@@ -143,435 +124,24 @@ df_tyrell$Tyrell <- as.numeric(as.character(df_tyrell$Tyrell))
 
 
 
-```{r}
-
-mytext=paste("Region: ", df_stark$name, "<br/>", "# of battles: ", df_stark$Stark)%>% 
-  lapply(htmltools::HTML)
-
-mybins = c(0,1,2,3,4,5,6,7)
-pal1 = colorBin( palette="YlOrBr", domain = df_stark$Stark, na.color="gray", bins=mybins)
-
-pal2 <- colorNumeric(
- palette = "Blues",
-  domain = df_stark$Stark)
-
-
-
-```
-
-
-Leaflet test - Stark
-```{r}
-
-test_leaflet <- leaflet(df_stark, options = leafletOptions(crs = leafletCRS(crsClass = "L.CRS.Simple"))) %>% 
-  addPolygons(fillColor = ~pal2(Stark), 
-              stroke=TRUE, 
-              fillOpacity = 0.9, 
-              color="black", 
-              weight=0.9,
-              label = mytext, 
-              labelOptions = labelOptions(style = list("font-weight" = "normal", padding = "3px 8px"), 
-                                          textsize = "13px", direction = "auto")) %>% 
-  addLegend( pal=pal2, 
-             values=~Stark, 
-             opacity=1, 
-             title = "Number of Battles per Region", 
-             position = "bottomleft")
-  
-
-test_leaflet
-```
-
-
-pal2 <- colorNumeric(
- palette = "Blues",
-  domain = df_stark$Stark)
-
-Baratheon leaflet
-```{r}
-mytext_bar=paste("Region: ", df_baratheon$name, "<br/>", "# of battles: ", df_baratheon$Baratheon)%>% 
-  lapply(htmltools::HTML)
-mybins_bar = c(0,1,2,3)
-pal_bar = colorBin( palette="Blues", domain = df_baratheon$Baratheon, na.color="gray", bins=mybins_bar)
-
-#pal_bar <- colorNumeric(
- #palette = "Blues",
-  #domain = df_baratheon$Baratheon)
-
-baratheon_leaflet <- leaflet(df_baratheon, options = leafletOptions(crs = leafletCRS(crsClass = "L.CRS.Simple"))) %>% 
-  addPolygons(fillColor = ~pal_bar(Baratheon), 
-              stroke=TRUE, 
-              fillOpacity = 0.9, 
-              color="black", 
-              weight=0.9,
-              label = mytext_bar, 
-              labelOptions = labelOptions(style = list("font-weight" = "normal", padding = "3px 8px"), 
-                                          textsize = "13px", direction = "auto")) %>% 
-  addLegend( pal=pal_bar, 
-             values=~Baratheon, 
-             opacity=1, 
-             title = "Number of Battles per Region", 
-             position = "bottomleft")
-  
-
-baratheon_leaflet
-```
-
-
-Bolton leaflet
-```{r}
-mytext_BOLLL = paste("Region: ", df_bolton$name, "<br/>", "# of battles: ", df_bolton$Bolton)%>% 
-  lapply(htmltools::HTML)
-
-mybins_BOLLL = c(0,1,2,3)
-
-pal_BOLLL = colorBin( palette="Blues", domain = df_bolton$Bolton, na.color="gray", bins=mybins_BOLLL)
-
-
-bolton_leaflet <- leaflet(df_bolton, options = leafletOptions(crs = leafletCRS(crsClass = "L.CRS.Simple"))) %>% 
-  addPolygons(fillColor = ~pal_BOLLL(Bolton), 
-              stroke=TRUE, 
-              fillOpacity = 0.9, 
-              color="black", 
-              weight=0.9,
-              label = mytext_BOLLL, 
-              labelOptions = labelOptions(style = list("font-weight" = "normal", padding = "3px 8px"), 
-                                          textsize = "13px", direction = "auto")) %>% 
-  addLegend( pal=pal_BOLLL, 
-             values=~Bolton, 
-             opacity=1, 
-             title = "Number of Battles per Region", 
-             position = "bottomleft")
-  
-
-bolton_leaflet
-```
-
-
-Frey leaflet
-```{r}
-mytext_frey = paste("Region: ", df_frey$name, "<br/>", "# of battles: ", df_frey$Frey)%>% 
-  lapply(htmltools::HTML)
-
-mybins_frey = c(0,1,2,3)
-
-pal_frey = colorBin( palette="Blues", domain = df_frey$Frey, na.color="gray", bins=mybins_frey)
-
-
-frey_leaflet <- leaflet(df_frey, options = leafletOptions(crs = leafletCRS(crsClass = "L.CRS.Simple"))) %>% 
-  addPolygons(fillColor = ~pal_frey(Frey), 
-              stroke=TRUE, 
-              fillOpacity = 0.9, 
-              color="black", 
-              weight=0.9,
-              label = mytext_frey, 
-              labelOptions = labelOptions(style = list("font-weight" = "normal", padding = "3px 8px"), 
-                                          textsize = "13px", direction = "auto")) %>% 
-  addLegend( pal=pal_frey, 
-             values=~Frey, 
-             opacity=1, 
-             title = "Number of Battles per Region", 
-             position = "bottomleft")
-  
-
-frey_leaflet
-```
-
-
-
-Glover leaflet
-```{r}
-mytext_glo = paste("Region: ", df_glover$name, "<br/>", "# of battles: ", df_glover$Glover)%>% 
-  lapply(htmltools::HTML)
-
-mybins_glo = c(0,1,2)
-
-pal_glo = colorBin( palette="Blues", domain = df_glover$Glover, na.color="gray", bins=mybins_glo)
-
-
-glover_leaflet <- leaflet(df_glover, options = leafletOptions(crs = leafletCRS(crsClass = "L.CRS.Simple"))) %>% 
-  addPolygons(fillColor = ~pal_glo(Glover), 
-              stroke=TRUE, 
-              fillOpacity = 0.9, 
-              color="black", 
-              weight=0.9,
-              label = mytext_glo, 
-              labelOptions = labelOptions(style = list("font-weight" = "normal", padding = "3px 8px"), 
-                                          textsize = "13px", direction = "auto")) %>% 
-  addLegend( pal=pal_glo, 
-             values=~Glover, 
-             opacity=1, 
-             title = "Number of Battles per Region", 
-             position = "bottomleft")
-  
-
-glover_leaflet
-```
-
-
-
-
-Greyjoy leaflet
-```{r}
-mytext_grey = paste("Region: ", df_greyjoy$name, "<br/>", "# of battles: ", df_greyjoy$Greyjoy)%>% 
-  lapply(htmltools::HTML)
-
-mybins_grey = c(0,1,2,3,4,5,6,7,8,9)
-
-pal_grey = colorBin( palette="Blues", domain = df_greyjoy$Greyjoy, na.color="gray", bins=mybins_grey)
-
-
-greyjoy_leaflet <- leaflet(df_greyjoy, options = leafletOptions(crs = leafletCRS(crsClass = "L.CRS.Simple"))) %>% 
-  addPolygons(fillColor = ~pal_grey(Greyjoy), 
-              stroke=TRUE, 
-              fillOpacity = 0.9, 
-              color="black", 
-              weight=0.9,
-              label = mytext_grey, 
-              labelOptions = labelOptions(style = list("font-weight" = "normal", padding = "3px 8px"), 
-                                          textsize = "13px", direction = "auto")) %>% 
-  addLegend( pal=pal_grey, 
-             values=~Greyjoy, 
-             opacity=1, 
-             title = "Number of Battles per Region", 
-             position = "bottomleft")
-  
-
-greyjoy_leaflet
-```
-
-
-
-Karstark leaflet
-```{r}
-mytext_kar = paste("Region: ", df_karstark$name, "<br/>", "# of battles: ", df_karstark$Karstark)%>% 
-  lapply(htmltools::HTML)
-
-mybins_kar = c(0,1,2)
-
-pal_kar = colorBin( palette="Blues", domain = df_karstark$Karstark, na.color="gray", bins=mybins_kar)
-
-
-karstark_leaflet <- leaflet(df_karstark, options = leafletOptions(crs = leafletCRS(crsClass = "L.CRS.Simple"))) %>% 
-  addPolygons(fillColor = ~pal_kar(Karstark), 
-              stroke=TRUE, 
-              fillOpacity = 0.9, 
-              color="black", 
-              weight=0.9,
-              label = mytext_kar, 
-              labelOptions = labelOptions(style = list("font-weight" = "normal", padding = "3px 8px"), 
-                                          textsize = "13px", direction = "auto")) %>% 
-  addLegend( pal=pal_kar, 
-             values=~Karstark, 
-             opacity=1, 
-             title = "Number of Battles per Region", 
-             position = "bottomleft")
-  
-
-karstark_leaflet
-```
-
-
-
-Lannister leaflet
-```{r}
-mytext_lan = paste("Region: ", df_lannister$name, "<br/>", "# of battles: ", df_lannister$Lannister)%>% 
-  lapply(htmltools::HTML)
-
-mybins_lan = c(0,1,2,3,4,5,6,7,8,9,10,11,12,13)
-
-pal_lan = colorBin( palette="Blues", domain = df_lannister$Lannister, na.color="gray", bins=mybins_lan)
-
-
-lannister_leaflet <- leaflet(df_lannister, options = leafletOptions(crs = leafletCRS(crsClass = "L.CRS.Simple"))) %>% 
-  addPolygons(fillColor = ~pal_lan(Lannister), 
-              stroke=TRUE, 
-              fillOpacity = 0.9, 
-              color="black", 
-              weight=0.9,
-              label = mytext_lan, 
-              labelOptions = labelOptions(style = list("font-weight" = "normal", padding = "3px 8px"), 
-                                          textsize = "13px", direction = "auto")) %>% 
-  addLegend( pal=pal_lan, 
-             values=~Lannister, 
-             opacity=1, 
-             title = "Number of Battles per Region", 
-             position = "bottomleft")
-  
-
-lannister_leaflet
-```
-
-
-
-Mormont leaflet
-```{r}
-mytext_mor = paste("Region: ", df_mormont$name, "<br/>", "# of battles: ", df_mormont$Mormont)%>% 
-  lapply(htmltools::HTML)
-
-mybins_mor = c(0,1,2)
-
-pal_mor = colorBin( palette="Blues", domain = df_mormont$Mormont, na.color="gray", bins=mybins_mor)
-
-
-mormont_leaflet <- leaflet(df_mormont, options = leafletOptions(crs = leafletCRS(crsClass = "L.CRS.Simple"))) %>% 
-  addPolygons(fillColor = ~pal_mor(Mormont), 
-              stroke=TRUE, 
-              fillOpacity = 0.9, 
-              color="black", 
-              weight=0.9,
-              label = mytext_mor, 
-              labelOptions = labelOptions(style = list("font-weight" = "normal", padding = "3px 8px"), 
-                                          textsize = "13px", direction = "auto")) %>% 
-  addLegend( pal=pal_mor, 
-             values=~Mormont, 
-             opacity=1, 
-             title = "Number of Battles per Region", 
-             position = "bottomleft")
-  
-
-mormont_leaflet
-```
-
-
-Stark leaflet
-```{r}
-mytext_sta = paste("Region: ", df_stark$name, "<br/>", "# of battles: ", df_stark$Stark)%>% 
-  lapply(htmltools::HTML)
-
-mybins_sta = c(0,1,2,3,4,5,6,7)
-
-pal_sta = colorBin( palette="YlOrBr", domain = df_stark$Stark, na.color="gray", bins=mybins_sta)
-
-
-stark_leaflet <- leaflet(df_stark, options = leafletOptions(crs = leafletCRS(crsClass = "L.CRS.Simple"))) %>% 
-  addPolygons(fillColor = ~pal_sta(Stark), 
-              stroke=TRUE, 
-              fillOpacity = 0.9, 
-              color="black", 
-              weight=0.9,
-              label = mytext_sta, 
-              labelOptions = labelOptions(style = list("font-weight" = "normal", padding = "3px 8px"), 
-                                          textsize = "13px", direction = "auto")) %>% 
-  addLegend( pal=pal_sta, 
-             values=~Stark, 
-             opacity=1, 
-             title = "Number of Battles per Region", 
-             position = "bottomleft")
-  
-
-stark_leaflet
-```
-
-
-Tully leaflet
-```{r}
-mytext_tul = paste("Region: ", df_tully$name, "<br/>", "# of battles: ", df_tully$Tully)%>% 
-  lapply(htmltools::HTML)
-
-mybins_tul = c(0,1,2,3,4,5)
-
-pal_tul = colorBin( palette="YlOrBr", domain = df_tully$Tully, na.color="gray", bins=mybins_tul)
-
-
-tully_leaflet <- leaflet(df_tully, options = leafletOptions(crs = leafletCRS(crsClass = "L.CRS.Simple"))) %>% 
-  addPolygons(fillColor = ~pal_tul(Tully), 
-              stroke=TRUE, 
-              fillOpacity = 0.9, 
-              color="black", 
-              weight=0.9,
-              label = mytext_tul, 
-              labelOptions = labelOptions(style = list("font-weight" = "normal", padding = "3px 8px"), 
-                                          textsize = "13px", direction = "auto")) %>% 
-  addLegend( pal=pal_tul, 
-             values=~Tully, 
-             opacity=1, 
-             title = "Number of Battles per Region", 
-             position = "bottomleft")
-  
-
-tully_leaflet
-```
-
-
-Tyrell leaflet
-```{r}
-mytext_tyr = paste("Region: ", df_tyrell$name, "<br/>", "# of battles: ", df_tyrell$Tyrell)%>% 
-  lapply(htmltools::HTML)
-
-mybins_tyr = c(0,1,2)
-
-pal_tyr = colorBin( palette="YlOrBr", domain = df_tyrell$Tyrell, na.color="gray", bins=mybins_tyr)
-
-
-tyrell_leaflet <- leaflet(df_tyrell, options = leafletOptions(crs = leafletCRS(crsClass = "L.CRS.Simple"))) %>% 
-  addPolygons(fillColor = ~pal_tyr(Tyrell), 
-              stroke=TRUE, 
-              fillOpacity = 0.9, 
-              color="black", 
-              weight=0.9,
-              label = mytext_tyr, 
-              labelOptions = labelOptions(style = list("font-weight" = "normal", padding = "3px 8px"), 
-                                          textsize = "13px", direction = "auto")) %>% 
-  addLegend( pal=pal_tyr, 
-             values=~Tyrell, 
-             opacity=1, 
-             title = "Number of Battles per Region", 
-             position = "bottomleft")
-  
-
-tyrell_leaflet
-```
-
-
-
-leaf <- leaflet() %>% addTiles() %>% addLegend(
-  position = 'bottomright',
-  colors = rgb(t(col2rgb(palette())) / 255),
-  labels = palette(), opacity = 1,
-  title = 'An Obvious Legend'
-)
-
-# see what it looks like with no customization
-leaf
-
-# you specify a custom style like this
-#   but the legend rectanges are .legend i
-#   instead of .legend .circle
-library(htmltools)
-
-
-# Final Map
-leaflet(world_spdf) %>% 
-  addTiles()  %>% 
-  setView( lat=10, lng=0 , zoom=2) %>%
-  addPolygons( 
-    fillColor = ~mypalette(POP2005), stroke=TRUE, fillOpacity = 0.9, color="white", weight=0.3,
-    highlight = highlightOptions( weight = 5, color = ~colorNumeric("Blues", POP2005)(POP2005), dashArray = "", fillOpacity = 0.3, bringToFront = TRUE),
-    label = mytext,
-    labelOptions = labelOptions( style = list("font-weight" = "normal", padding = "3px 8px"), textsize = "13px", direction = "auto")
-  ) %>%
-  addLegend( pal=mypalette, values=~POP2005, opacity=0.9, title = "Population (M)", position = "bottomleft" )
-
-
-
-# Create a color palette with handmade bins.
-mybins=c(0,10,20,50,100,500,Inf)
-mypalette = colorBin( palette="YlOrBr", domain=world_spdf@data$POP2005, na.color="transparent", bins=mybins)
-
-# Prepar the text for the tooltip:
-mytext=paste("Country: ", world_spdf@data$NAME,"<br/>", "Area: ", world_spdf@data$AREA, "<br/>", "Population: ", round(world_spdf@data$POP2005, 2), sep="") %>%
-  lapply(htmltools::HTML)
-
-
-
 
 Baratheon map
 ```{r}
+bar_points <- st_centroid(df_baratheon)
+bar_points <- st_coordinates(bar_points$geometry)
+bar_points <- cbind(df_baratheon, bar_points)
+
 baratheon_map <- ggplot(df_baratheon) +
   geom_sf(aes(fill = Baratheon), color = "white", size = 0.2) +
   #scale_fill_gradient(colors = c("blue","mediumorchid1","orange")) +
-  theme_minimal()
+  theme_minimal() +
+  theme(legend.position = "none",
+        axis.text = element_blank(),
+        axis.title = element_blank())+
+  geom_text(data = subset(bar_points, Baratheon != 0),
+                  aes(x = X, y = Y, label = Baratheon),
+            check_overlap = TRUE,
+            color = "white")
 
 baratheon_map
 
@@ -580,10 +150,22 @@ baratheon_map
 
 Bolton map
 ```{r}
+bol_points <- st_centroid(df_bolton)
+bol_points <- st_coordinates(bol_points$geometry)
+bol_points <- cbind(df_bolton, bol_points)
+
+
 bolton_map <- ggplot(df_bolton) +
   geom_sf(aes(fill = Bolton), color = "white", size = 0.2) +
   #scale_fill_gradient(colors = c("blue","mediumorchid1","orange")) +
-  theme_minimal()
+  theme_minimal()+
+  theme(legend.position = 'none',
+         axis.text = element_blank(),
+               axis.title = element_blank())+
+  geom_text(data = subset(bol_points, Bolton != 0),
+                  aes(x = X, y = Y, label = Bolton),
+            check_overlap = TRUE,
+            color = "white")
 
 bolton_map
 ```
@@ -591,10 +173,27 @@ bolton_map
 
 Frey map
 ```{r}
+frey_points <- st_centroid(df_frey)
+frey_points <- st_coordinates(frey_points$geometry)
+frey_points <- cbind(df_frey, frey_points)
+
+
+
+               
+
+
+
 frey_map <- ggplot(df_frey) +
   geom_sf(aes(fill = Frey), color = "white", size = 0.2) +
   #scale_fill_gradient(colors = c("blue","mediumorchid1","orange")) +
-  theme_minimal()
+  theme_minimal() +
+  theme(legend.position = 'none',
+         axis.text = element_blank(),
+        axis.title = element_blank())+
+  geom_text(data = subset(frey_points, Frey != 0),
+                  aes(x = X, y = Y, label = Frey),
+            check_overlap = TRUE,
+            color = "white")
 
 frey_map
 ```
@@ -602,9 +201,23 @@ frey_map
 
 Glover map
 ```{r}
+
+glo_points <- st_centroid(df_glover)
+glo_points <- st_coordinates(glo_points$geometry)
+glo_points <- cbind(df_glover, glo_points)
+
+
+
 glover_map <- ggplot(df_glover) +
   geom_sf(aes(fill = Glover), color = "white", size = 0.2)+
-  theme_minimal()
+  theme_minimal()+
+  theme(legend.position = 'none',
+         axis.text = element_blank(),
+        axis.title = element_blank())+
+  geom_text(data = subset(glo_points, Glover != 0),
+                  aes(x = X, y = Y, label = Glover),
+            check_overlap = TRUE,
+            color = "white")
 
 glover_map
 ```
@@ -612,9 +225,22 @@ glover_map
 
 Greyjoy map
 ```{r}
+gre_points <- st_centroid(df_greyjoy)
+gre_points <- st_coordinates(gre_points$geometry)
+gre_points <- cbind(df_greyjoy, gre_points)
+
+
 greyjoy_map <- ggplot(df_greyjoy) +
   geom_sf(aes(fill = Greyjoy), color = "white", size = 0.2) +
-  theme_minimal()
+  theme_minimal()+
+  theme(legend.position = 'none',
+         axis.text = element_blank(),
+        axis.title = element_blank())+
+  geom_text(data = subset(gre_points, Greyjoy != 0),
+                  aes(x = X, y = Y, label = Greyjoy),
+            check_overlap = TRUE,
+            color = "white")
+
 
 greyjoy_map
 ```
@@ -622,9 +248,20 @@ greyjoy_map
 
 Karstark map
 ```{r}
+kar_points <- st_centroid(df_karstark)
+kar_points <- st_coordinates(kar_points$geometry)
+kar_points <- cbind(df_karstark, kar_points)
+
 karstark_map <-ggplot(df_karstark) +
   geom_sf(aes(fill = Karstark), color = "white", size = 0.2) +
-  theme_minimal()
+  theme_minimal()+
+  theme(legend.position = 'none',
+         axis.text = element_blank(),
+         axis.title = element_blank())+
+  geom_text(data = subset(kar_points, Karstark != 0),
+                  aes(x = X, y = Y, label = Karstark),
+            check_overlap = TRUE,
+            color = "white")
 
 karstark_map
 ```
@@ -632,9 +269,21 @@ karstark_map
 
 Lannister map
 ```{r}
+lan_points <- st_centroid(df_lannister)
+lan_points <- st_coordinates(lan_points$geometry)
+lan_points <- cbind(df_lannister, lan_points)
+
+
 lannister_map <- ggplot(df_lannister) +
   geom_sf(aes(fill = Lannister), color = "white", size = 0.2) +
-  theme_minimal()
+  theme_minimal()+
+  theme(legend.position = 'none',
+         axis.text = element_blank(),
+         axis.title = element_blank())+
+  geom_text(data = subset(lan_points, Lannister != 0),
+                  aes(x = X, y = Y, label = Lannister),
+            check_overlap = TRUE,
+            color = "white")
 
 lannister_map
 ```
@@ -642,9 +291,21 @@ lannister_map
 
 Mormont map
 ```{r}
+mor_points <- st_centroid(df_mormont)
+mor_points <- st_coordinates(mor_points$geometry)
+mor_points <- cbind(df_mormont, mor_points)
+
+
 mormont_map <- ggplot(df_mormont) +
   geom_sf(aes(fill = Mormont), color = "white", size = 0.2) +
-  theme_minimal()
+  theme_minimal()+
+  theme(legend.position = 'none',
+         axis.text = element_blank(),
+         axis.title = element_blank())+
+  geom_text(data = subset(mor_points, Mormont != 0),
+                  aes(x = X, y = Y, label = Mormont),
+            check_overlap = TRUE,
+            color = "white")
 
 mormont_map
 ```
@@ -652,9 +313,21 @@ mormont_map
 
 Stark map
 ```{r}
+sta_points <- st_centroid(df_stark)
+sta_points <- st_coordinates(sta_points$geometry)
+sta_points <- cbind(df_stark, sta_points)
+
+
 stark_map <- ggplot(df_stark) +
   geom_sf(aes(fill = Stark), color = "white", size = 0.2) +
-  theme_minimal()
+  theme_minimal()+
+  theme(legend.position = 'none',
+         axis.text = element_blank(),
+         axis.title = element_blank())+
+  geom_text(data = subset(sta_points, Stark != 0),
+                  aes(x = X, y = Y, label = Stark),
+            check_overlap = TRUE,
+            color = "white")
 
 stark_map
 ```
@@ -662,9 +335,21 @@ stark_map
 
 Tully map
 ```{r}
+tul_points <- st_centroid(df_tully)
+tul_points <- st_coordinates(tul_points$geometry)
+tul_points <- cbind(df_tully, tul_points)
+
+
 tully_map <- ggplot(df_tully) +
   geom_sf(aes(fill = Tully), color = "white", size = 0.2) +
-  theme_minimal()
+  theme_minimal()+
+  theme(legend.position = 'none',
+         axis.text = element_blank(),
+         axis.title = element_blank())+
+  geom_text(data = subset(tul_points, Tully != 0),
+                  aes(x = X, y = Y, label = Tully),
+            check_overlap = TRUE,
+            color = "white")
 
 tully_map
 ```
@@ -672,15 +357,44 @@ tully_map
 
 Tyrell map
 ```{r}
+tyr_points <- st_centroid(df_tyrell)
+tyr_points <- st_coordinates(tyr_points$geometry)
+tyr_points <- cbind(df_tyrell, tyr_points)
+
+
 tyrell_map <- ggplot(df_tyrell) +
   geom_sf(aes(fill = Tyrell), color = "white", size = 0.2) +
-  theme_minimal()
+  theme_minimal()+
+  theme(legend.position = 'none',
+         axis.text = element_blank(),
+         axis.title = element_blank())+
+  geom_text(data = subset(tyr_points, Tyrell != 0),
+                  aes(x = X, y = Y, label = Tyrell),
+            check_overlap = TRUE,
+            color = "white")
 
 tyrell_map
 ```
 
 
 
+```{r}
+
+ggsave(filename = "Baratheon.png", plot = baratheon_map, width = 1, height = 1.5, units = "in")
+ggsave(filename = "Bolton.png", plot = bolton_map, width = 1, height = 1.5, units = "in")
+ggsave(filename = "Frey.png", plot = frey_map, width = 1, height = 1.5, units = "in")
+ggsave(filename = "Glover.png", plot = glover_map, width = 1, height = 1.5, units = "in")
+ggsave(filename = "Greyjoy.png", plot = greyjoy_map, width = 1, height = 1.5, units = "in")
+ggsave(filename = "Karstark.png", plot = karstark_map, width = 1, height = 1.5, units = "in")
+ggsave(filename = "Lannister.png", plot = lannister_map, width = 1, height = 1.5, units = "in")
+ggsave(filename = "Mormont.png", plot = mormont_map, width = 1, height = 1.5, units = "in")
+ggsave(filename = "Stark.png", plot = stark_map, width = 1, height = 1.5, units = "in")
+ggsave(filename = "Tully.png", plot = tully_map, width = 1, height = 1.5, units = "in")
+ggsave(filename = "Tyrell.png", plot = tyrell_map, width = 1, height = 1.5, units = "in")
+
+
+
+```
 
 
 
